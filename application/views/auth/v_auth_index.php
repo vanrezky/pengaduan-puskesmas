@@ -12,15 +12,15 @@
     <title>SB Admin 2 - Login</title>
 
     <!-- Custom fonts for this template-->
-    <link href="<?= base_url(); ?>assets/sb_admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="<?= base_url(); ?>assets/backend/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="<?= base_url(); ?>assets/sb_admin/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="<?= base_url(); ?>assets/backend/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
-<body class="bg-gradient-primary">
+<body class="bg-gradient-success">
 
     <div class="container">
 
@@ -31,58 +31,109 @@
 
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
                         <div class="row">
                             <div class="col-lg-6 d-none d-lg-block">
-                                <img class="img-fluid" src="<?= base_url('assets/img/cover_login.png') ?>">
+                                <img class="img-fluid" src="<?= base_url('assets/backend/img/login.jpg') ?>">
                             </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Silahkan Login</h1>
 
                                     </div>
-                                    <form class="user" method="post" enctype="multipart/form-data" action="<?php echo base_url('login') ?>">
-                                        <?php echo $this->session->flashdata('message'); ?>
+                                    <div id="form-info"></div>
+                                    <form class="user" id="form-submit" method="post" action="<?= base_url('auth/check') ?>">
+                                        <?= csrf_field("csrf_protection"); ?>
                                         <div class="form-group">
-                                            <input type="text" name="username" class="form-control form-control-user" placeholder="Enter Username...">
+                                            <input type="text" name="username" id="username" class="form-control form-control-user">
+                                            <div class="invalid-feedback" id="feedusername"></div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="password" class="form-control form-control-user" placeholder="Password">
+                                            <input type="password" name="password" id="password" class="form-control form-control-user">
+                                            <div class="invalid-feedback" id="feedpassword"></div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember Me</label>
-                                            </div>
-                                        </div>
-                                        <button class="btn btn-primary btn-user btn-block" type="submit"> Login</button>
-                                        <hr>
+                                        <button class="btn btn-primary pull-right btn-block" id="btn-submit" disabled type="submit"> Login</button>
                                     </form>
-                                    <div class="text-center">
-                                        <a class="small" href="#">Forgot Password?</a>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="<?= base_url(); ?>assets/sb_admin/vendor/jquery/jquery.min.js"></script>
-    <script src="<?= base_url(); ?>assets/sb_admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= base_url(); ?>assets/backend/vendor/jquery/jquery.min.js"></script>
+    <script src="<?= base_url(); ?>assets/backend/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="<?= base_url(); ?>assets/sb_admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="<?= base_url(); ?>assets/backend/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="<?= base_url(); ?>assets/sb_admin/js/sb-admin-2.min.js"></script>
+    <script src="<?= base_url(); ?>assets/backend/js/sb-admin-2.min.js"></script>
+    <script src="<?= base_url('assets/js/sweetalert2/sweetalert2.all.min.js'); ?>"></script>
+    <script>
+        $(document).ready(function() {
+            $("#btn-submit").prop("disabled", false);
+            $("#form-submit").submit(function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    type: "post",
+                    url: $(this).attr("action"),
+                    data: $(this).serialize(),
+                    dataType: "json",
+                    beforeSend: function() {
+                        $("#btn-submit").addClass("disabled btn-progress");
+                    },
+                    complete: function() {
+                        $("#btn-submit").removeClass("disabled btn-progress");
+                    },
+                    success: function(response) {
+
+                        if (response.csrf) {
+                            $("#csrf_protection").val(response.csrf);
+                        }
+
+                        if (response.success) {
+                            $("#form-submit").removeClass("is-invalid");
+
+                            Swal.fire("Berhasil..", response.success.pesan, "success").then(() => {
+                                window.location = response.success.url;
+                            });
+                        }
+
+                        if (response.error) {
+
+                            if (response.error.username) {
+                                $('#username').addClass('is-invalid');
+                                $('#feedusername').html(response.error.username);
+                            } else {
+                                $('#username').removeClass('is-invalid');
+                                $('#feedusername').html("");
+                            }
+
+                            if (response.error.password) {
+                                $('#password').addClass('is-invalid');
+                                $('#feedpassword').html(response.error.password);
+                            } else {
+                                $('#password').removeClass('is-invalid');
+                                $('#feedpassword').html("");
+                            }
+
+                            if (response.error.info) {
+                                $("#form-info").html(response.error.info);
+                            } else {
+                                $("#form-info").empty();
+                            }
+                        }
+                    }
+                });
+
+            });
+        });
+    </script>
 
 </body>
 

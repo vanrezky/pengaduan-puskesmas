@@ -1,79 +1,70 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Dashboard extends MY_Controller {
+class Dashboard extends MY_Controller
+{
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('m_dashboard');
 		$this->load->library('googlemaps');
-	} 
+		logged_in();
+	}
 
 
 	public function index()
 	{
 
-		if ($this->session->userdata('logged_in') != "" && $this->session->userdata('id_role') == "1"){
+		$datamap = $this->m_dashboard->all_costumer();
 
-			$datamap = $this->m_dashboard->all_costumer();
+		$this->data['title'] = "SISTEM INFORMASI GIS";
+		$config['map_height'] = "320px";
+		$config['center'] = '0.5070677,101.44777929999998';
+		$config['zoom'] = 'auto';
 
-			$this->data['title'] = "SISTEM INFORMASI GIS";
-			$config['map_height'] = "320px";
-			$config['center'] = '0.5070677,101.44777929999998';
-			$config['zoom'] = 'auto';
+		$this->googlemaps->initialize($config);
 
-			$this->googlemaps->initialize($config);
+		foreach ($datamap as $value) {
 
-			foreach ($datamap as $value) {
+			$marker = array();
+			$marker['position'] = "{$value->latitude}, {$value->longitude}";
 
-				$marker = array();
-				$marker['position'] = "{$value->latitude}, {$value->longitude}";
+			$marker['animation'] = 'BOUNCE';
+			$marker['infowindow_content'] = '<div class="media" style="width:450px;">';
+			$marker['infowindow_content'] .= '<div class="media-left">';
+			$marker['infowindow_content'] .= '<img src="' . base_url("assets/foto/{$value->foto}") . '" class="media-object" style="height:130px;width:150px;">';
+			$marker['infowindow_content'] .= '<center style="background-color:#00bcd4;">' . $value->jenis . '</center>';
+			$marker['infowindow_content'] .= '</div>';
+			$marker['infowindow_content'] .= '<div class="media-body">';
+			$marker['infowindow_content'] .= '<div class="col-md-12">';
+			$marker['infowindow_content'] .= '<h5>' . $value->nama_costumer . '</h5>';
+			$marker['infowindow_content'] .= 'No. Telp <span style="margin-left:14px;">:</span> <strong>' . $value->no_telp . '</strong><br>';
+			$marker['infowindow_content'] .= 'Status <span style="margin-left:27px;">:</span> <strong>' . $value->alamat . '</strong></p>';
+			$marker['infowindow_content'] .= '<a style="float:right;"class="btn btn-info" href="' . site_url('admin/costumer/route/' . $value->id_costumer) . '" >Cari </a>';
+			if ($value->jenis_tvkabel == 1) {
 
-				$marker['animation'] = 'BOUNCE';
-				$marker['infowindow_content'] = '<div class="media" style="width:450px;">';
-				$marker['infowindow_content'] .= '<div class="media-left">';
-				$marker['infowindow_content'] .= '<img src="' . base_url("assets/foto/{$value->foto}") . '" class="media-object" style="height:130px;width:150px;">';
-				$marker['infowindow_content'] .= '<center style="background-color:#00bcd4;">' . $value->jenis . '</center>';
-				$marker['infowindow_content'] .= '</div>';
-				$marker['infowindow_content'] .= '<div class="media-body">';
-				$marker['infowindow_content'] .= '<div class="col-md-12">';
-				$marker['infowindow_content'] .= '<h5>' . $value->nama_costumer . '</h5>';
-				$marker['infowindow_content'] .= 'No. Telp <span style="margin-left:14px;">:</span> <strong>' . $value->no_telp . '</strong><br>';
-				$marker['infowindow_content'] .= 'Status <span style="margin-left:27px;">:</span> <strong>' . $value->alamat . '</strong></p>';
-				$marker['infowindow_content'] .= '<a style="float:right;"class="btn btn-info" href="' . site_url('admin/costumer/route/' . $value->id_costumer) . '" >Cari </a>';
-				if ($value->jenis_tvkabel == 1) {
-
-					$marker['icon'] = base_url("assets/icon/marker_basic.png");
-				} else if ($value->jenis_tvkabel == 2) {
-					$marker['icon'] = base_url("assets/icon/marker_medium.png");
-				} else {
-					$marker['icon'] = base_url("assets/icon/marker_advanced.png");
-				}
-				$this->googlemaps->add_marker($marker);
-
+				$marker['icon'] = base_url("assets/icon/marker_basic.png");
+			} else if ($value->jenis_tvkabel == 2) {
+				$marker['icon'] = base_url("assets/icon/marker_medium.png");
+			} else {
+				$marker['icon'] = base_url("assets/icon/marker_advanced.png");
 			}
-
-			$data['map'] = $this->googlemaps->create_map();
-
-			$data['title'] = ' Administrator Dashboard';
-			$data['total_costumer'] = $this->m_dashboard->hitungAllCostumer();
-			$data['basic'] = $this->m_dashboard->hitungCostumerBasic();
-			$data['medium'] = $this->m_dashboard->hitungCostumerMedium();
-			$data['advanced'] = $this->m_dashboard->hitungCostumerAdvanced();
-			$data['get_jenisBerlangganan'] = $this->m_dashboard->jenis_berlangganan();
-			$data['get_aktivitas_user'] = $this->m_dashboard->aktivitas_user();
-
-
-			$this->render('admin/dashboard', $data);
-			
+			$this->googlemaps->add_marker($marker);
 		}
-		else {
 
-			redirect('login/logout');
-			
-		}
-		
+		$data['map'] = $this->googlemaps->create_map();
+
+		$data['title'] = ' Administrator Dashboard';
+		$data['total_costumer'] = $this->m_dashboard->hitungAllCostumer();
+		$data['basic'] = $this->m_dashboard->hitungCostumerBasic();
+		$data['medium'] = $this->m_dashboard->hitungCostumerMedium();
+		$data['advanced'] = $this->m_dashboard->hitungCostumerAdvanced();
+		$data['get_jenisBerlangganan'] = $this->m_dashboard->jenis_berlangganan();
+		$data['get_aktivitas_user'] = $this->m_dashboard->aktivitas_user();
+
+
+		$this->render('admin/dashboard', $data);
 	}
 
 	public function cetak_laporan()
@@ -100,7 +91,7 @@ class Dashboard extends MY_Controller {
 		if ($this->session->userdata('logged_in') != "" && $this->session->userdata('id_role') == "1") {
 
 			$data['get_pengaturan'] = $this->m_dashboard->get_all_pengaturan();
-			
+
 
 			$data['title'] = 'Pengaturan Website';
 
