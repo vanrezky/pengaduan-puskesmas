@@ -7,8 +7,6 @@ class Auth extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-
-        $this->load->model('m_login');
     }
 
     public function index()
@@ -19,7 +17,7 @@ class Auth extends CI_Controller
         }
 
         $data = [
-            'setting' => $this->db->get('tb_website')->row_array()
+            'setting' => $this->db->get('tb_pengaturan')->row_array()
         ];
 
         $this->load->view('auth/v_auth_index', $data);
@@ -29,7 +27,7 @@ class Auth extends CI_Controller
     {
 
         if ($this->input->is_ajax_request()) {
-            $csrf = $this->security->get_csrf_hash();
+            $csrf = csrf_hash();
 
             $validation = $this->form_validation;
             $validation->set_rules("username", "Username", "trim|required", [

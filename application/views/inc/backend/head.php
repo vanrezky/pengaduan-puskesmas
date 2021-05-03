@@ -9,9 +9,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title><?php echo $title; ?> | <?php echo $nama_website->nama_website; ?></title>
+    <title><?php echo $title; ?> | <?php echo $pengaturan["nama_website"]; ?></title>
 
-    <link rel="shortcut icon" href="<?= base_url('assets/img/' . $nama_website->logo); ?>">
+    <link rel="shortcut icon" href="<?= base_url('assets/img/' . $pengaturan["logo"]); ?>">
 
     <!-- Custom fonts for this template-->
     <link href="<?= base_url(); ?>assets/backend/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -21,11 +21,9 @@
     <link href="<?= base_url(); ?>assets/backend/css/sb-admin-2.min.css" rel="stylesheet">
     <!-- Data Tables -->
     <link href="<?= base_url(); ?>assets/backend/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <!-- Sweet Alert -->
-    <!-- <link href="<?= base_url(); ?>assets/sweet_alert/sweetalert.css" rel="stylesheet"> -->
 
     <script src="<?= base_url(); ?>assets/backend/vendor/jquery/jquery.min.js"></script>
     <!-- <script src="<?= base_url(); ?>assets/sweet_alert/sweetalert.min.js"></script> -->
     <!-- js maps -->
-    <?php echo $map['js']; ?>
+    <?= isset($map['js']) ? $map['js'] : ""; ?>
 </head>

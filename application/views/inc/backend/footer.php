@@ -1,4 +1,5 @@
 <!-- Footer -->
+</div>
 <footer class="sticky-footer bg-white">
     <div class="container my-auto">
         <div class="copyright text-center my-auto">
@@ -32,7 +33,7 @@
             <div class="modal-body">Tekan "Logout" dibawah jika kamu infin keluar dari aplikasi dan mengakhiri sesi login</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="<?= base_url('login/logout/') ?>">Logout</a>
+                <a class="btn btn-primary" href="<?= base_url('auth/logout/') ?>">Logout</a>
             </div>
         </div>
     </div>
@@ -48,19 +49,14 @@
 <!-- Custom scripts for all pages-->
 <script src="<?= base_url(); ?>assets/backend/js/sb-admin-2.min.js"></script>
 
-<!-- Page level plugins -->
+<script src="<?= base_url('assets/js/sweetalert2/sweetalert2.all.min.js'); ?>"></script>
+<script src="<?= base_url('assets/js/custom.js'); ?>"></script>
 
-<script src="<?= base_url(); ?>assets/backend/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="<?= base_url(); ?>assets/backend/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-<!-- sweetalert -->
-
-<!-- Page level custom scripts -->
-<script src="<?= base_url(); ?>assets/backend/js/demo/datatables-demo.js"></script>
 <script>
     // untuk isi form 
     function setMapToForm(latitude, longitude) {
-        $('input[name="latitude"]').val(latitude);
-        $('input[name="longitude"]').val(longitude);
+        $('#lat').val(latitude);
+        $('#lng').val(longitude);
     }
 
     // ganti lokasi saat drag
