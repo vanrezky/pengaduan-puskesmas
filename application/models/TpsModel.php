@@ -18,7 +18,12 @@ class TpsModel extends CI_Model
     {
         $this->db->select("*");
         $this->db->join("tb_jenistps jp", "jp.id_jenistps = tp.id_jenistps", "LEFT");
-        $this->db->where("id_tps", $id_tps);
+        if (is_string($id_tps)) {
+            $this->db->where("id_tps", $id_tps);
+        }
+        if (is_array($id_tps)) {
+            $this->db->where($id_tps);
+        }
         return $this->db->get($this::$table . " tp")->row_array();
     }
 

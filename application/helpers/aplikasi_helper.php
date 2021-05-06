@@ -250,3 +250,10 @@ function getChildGroupMenu($var, $parent)
     }
     return $child;
 }
+
+function role_akses()
+{
+    return [
+        1 => 'admin'
+    ];
+}

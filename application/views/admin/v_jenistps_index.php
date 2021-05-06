@@ -38,8 +38,7 @@
                                 echo "<td class='text-center'><img class='img-thumbnail sampul' src='" . base_url("uploads/img/" . $value['marker']) . "'></td>";
                                 echo "<td>$value[nama_jenistps]</td>";
                                 echo "<td class='text-center'>";
-                                echo "<a href='javascript:void(0)' class='btn btn-info btn-sm mx-1 my-1'><i class='fas fa-eye'></i></a>";
-                                echo "<a href='javascript:void(0)' class='btn btn-warning btn-sm mx-1 my-1'><i class='fas fa-edit'></i></a>";
+                                echo "<a href='javascript:void(0)' class='btn btn-warning btn-sm mx-1 my-1 btn-edit'><i class='fas fa-edit'></i></a>";
                                 echo "<a href='javascript:void(0)' class='btn btn-danger btn-sm mx-1 my-1 btn-delete'><i class='fas fa-trash'></i></a>";
                                 echo "</td>";
                                 echo "</tr>";
@@ -116,11 +115,37 @@
 
         $('#btn-add').click(function(e) {
             resetInput("form-submit");
-            $("#form-submit").attr('action', baseurl + '/admin/tps/jenis-save');
+            $("#form-submit").prop('action', baseurl + '/admin/tps/jenis-save');
             $(".label-preview-1").html("Pilih Gambar");
-            $(".img-preview-1").attr('src', baseurl + '/uploads/img/default.jpg');
+            $(".img-preview-1").prop('src', baseurl + '/uploads/img/default.jpg');
             $('.modalTitle').html('Tambah Jenis TPS');
             showModal("jenistpa-modal", true);
+        });
+
+        $(".btn-edit").click(function(e) {
+            let id = $(this).closest("tr").data("id");
+            $.ajax({
+                type: "get",
+                url: baseurl + "admin/tps/jenis-get/" + id,
+                dataType: "json",
+                success: function(response) {
+
+                    if (response.error) {
+                        Swal.fire("Terjadi Galat..!", response.error.pesan, "warning");
+                    }
+
+                    if (response.success) {
+
+                        $("#form-submit").prop('action', baseurl + '/admin/tps/jenis-save/' + id);
+                        $(".label-preview-1").html(response.data.marker);
+                        $(".img-preview-1").prop('src', baseurl + '/uploads/img/' + response.data.marker);
+                        $('.modalTitle').html('Edit Jenis TPS');
+                        $("#nama_jenistps").val(response.data.nama_jenistps);
+                        showModal("jenistpa-modal", true);
+                    }
+
+                }
+            });
         });
 
 
@@ -129,7 +154,7 @@
 
             $.ajax({
                 type: "post",
-                url: $(this).attr('action'),
+                url: $(this).prop('action'),
                 data: new FormData(this),
                 contentType: false,
                 cache: false,
@@ -185,7 +210,7 @@
 
         $(".btn-delete").click(function(e) {
             e.preventDefault();
-            let id = $(this).data("id");
+            let id = $(this).closest("tr").data("id");
 
             Swal.fire({
                 title: "Konfirmasi Ulang",
@@ -197,7 +222,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "post",
-                        url: baseurl + '/' + id,
+                        url: baseurl + 'admin/tps/jenis-delete/' + id,
                         data: $("#form-delete").serialize(),
                         dataType: "json",
                         beforeSend: function() {
@@ -210,6 +235,7 @@
 
                             if (response.csrf) {
                                 $("#csrf_delete").val(response.csrf);
+                                $("#csrf_protection").val(response.csrf);
                             }
 
                             if (response.error) {
@@ -217,7 +243,7 @@
                             }
                             if (response.success) {
                                 Swal.fire("Sukses..!", response.success.pesan, "success").then(() => {
-                                    location.reload();
+                                    window.location.href = baseurl + 'admin/tps/jenis'
                                 });
                             }
 
@@ -235,14 +261,14 @@
         });
     }
 
-    function showModal(attr, staticModal = false) {
+    function showModal(prop, staticModal = false) {
         if (staticModal) {
-            $("#" + attr).modal({
+            $("#" + prop).modal({
                 backdrop: "static",
                 keyboard: false,
             });
         } else {
-            $("#" + attr).modal("show");
+            $("#" + prop).modal("show");
         }
     }
 </script>

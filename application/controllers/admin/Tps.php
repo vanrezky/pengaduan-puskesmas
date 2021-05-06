@@ -19,11 +19,11 @@ class Tps extends MY_Controller
     {
 
         $per_page = '10'; #banyaknya data yang ditampilkan
-        $total = $this->tpsModel->getData(); #ambil semua data produk
+        $total = $this->tpsModel->getData()->num_rows(); #ambil semua total data tps
 
         $data = [
             'title' => "Data TPS",
-            'pagin' => Pagin('admin/tps/index', $total->num_rows(), $per_page),
+            'pagin' => Pagin('admin/tps/index', $total, $per_page),
             'tps' => $this->tpsModel->getData($per_page, Offset())->result_array(),
         ];
 
@@ -299,13 +299,13 @@ class Tps extends MY_Controller
                     } else {
                         $postmarker = $this->upload->data();
 
+
                         $config['image_library'] = 'GD2';
-                        $config['source_image'] = './uploads/img/' . $postmarker['file_name'];
-                        $config['create_thumb'] = FALSE;
+                        $config['source_image'] = 'uploads/img/' . $postmarker['file_name'];
                         $config['maintain_ratio'] = FALSE;
                         $config['width'] = 32;
                         $config['height'] = 32;
-                        $config['new_image'] = './uploads/img/thumbs/' . $postmarker['file_name'];
+                        $config['new_image'] = 'uploads/img/thumbs/' . $postmarker['file_name'];
                         $this->load->library('image_lib', $config);
 
                         if (!$this->image_lib->resize()) {
@@ -359,6 +359,85 @@ class Tps extends MY_Controller
                     }
                 }
             }
+            echo json_encode($msg);
+        }
+    }
+
+    public function jenisGet($id)
+    {
+        if ($this->input->is_ajax_request()) {
+            $id = decode($id);
+
+            $error = [
+                'error' => [
+                    'pesan' => "Maaf, data tidak ditemukan!"
+                ]
+            ];
+
+            if ($id) {
+                $jenis = $this->jenistpsModel->getDataID($id);
+
+                if ($jenis) {
+                    $msg = [
+                        "success" => "Data berhasil ditemukan!",
+                        "data" => $jenis
+                    ];
+                } else {
+                    $msg = $error;
+                }
+            } else {
+                $msg = $error;
+            }
+
+            echo json_encode($msg);
+        }
+    }
+
+    public function jenisDelete($id)
+    {
+        if ($this->input->is_ajax_request()) {
+
+            $id = decode($id);
+            $csrf = csrf_hash();
+
+            if ($id) {
+                $jenis = $this->jenistpsModel->getDataID($id);
+                $used = $this->tpsModel->getDataID(["tp.id_jenistps" => $id]);
+                if (empty($used)) {
+
+                    if (isset($jenis['marker'])) {
+                        if (file_exists("uploads/img/" . $jenis['marker']) && ($jenis['marker'] != 'default_marker.jpg') && ($jenis['marker'] != 'default.jpg')) {
+                            unlink("uploads/img/" . $jenis['marker']);
+                        }
+                    }
+
+                    $delete = $this->db->where("id_jenistps", $id)->delete("tb_jenistps");
+
+                    $msg = [
+                        'success' => [
+                            'pesan' => "Data berhasil dihapus!"
+                        ]
+                    ];
+                } else {
+
+
+                    $msg = [
+                        'csrf' => $csrf,
+                        'error' => [
+                            'pesan' => "Maaf, data sudah digunakan pada kategori tps!"
+                        ]
+                    ];
+                }
+            } else {
+
+                $msg = [
+                    'csrf' => $csrf,
+                    'error' => [
+                        'pesan' => "Maaf, data tidak ditemukan!"
+                    ]
+                ];
+            }
+
             echo json_encode($msg);
         }
     }

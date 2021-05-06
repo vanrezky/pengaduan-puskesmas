@@ -56,6 +56,15 @@ $route['admin/tps/edit/(:any)'] = 'admin/tps/data/$1';
 $route['admin/tps/update/(:any)'] = 'admin/tps/save/$1';
 $route['admin/tps/jenis-save'] = 'admin/tps/jenisSave';
 $route['admin/tps/jenis-save/(:any)'] = 'admin/tps/jenisSave/$1';
+$route['admin/tps/jenis-delete/(:any)'] = 'admin/tps/jenisDelete/$1';
+$route['admin/tps/jenis-get/(:any)'] = 'admin/tps/jenisGet/$1';
+
+$route['admin/pengguna'] = 'admin/user';
+$route['admin/pengguna/add'] = 'admin/user/data';
+$route['admin/pengguna/edit/(:any)'] = 'admin/user/data/$1';
+$route['admin/pengguna/save'] = 'admin/user/save';
+$route['admin/pengguna/save/(:any)'] = 'admin/user/save/$1';
+$route['admin/pengguna/update/(:any)'] = 'admin/user/save/$1';
 
 
 $route['default_controller'] = 'home';
