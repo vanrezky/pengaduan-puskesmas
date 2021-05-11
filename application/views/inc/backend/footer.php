@@ -68,6 +68,7 @@
 
         // lempar newLat dan new Lng ke setMapToForm
         setMapToForm(newLat, newLng);
+        
         // animasi
         map.panTo(map.getCenter());
     }

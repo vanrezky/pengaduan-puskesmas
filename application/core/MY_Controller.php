@@ -19,9 +19,16 @@ class MY_Controller extends CI_Controller
         $this->load->view('inc/backend/footer');
     }
 
-    function home($view, $data)
+    function view($view, $data, $inject_html = false)
     {
-        $this->load->view('inc/frontend/head', $data);
+        $data['pengaturan'] = getPengaturanWebsite();
+        
+        $this->load->view('inc/frontend/header', $data);
+
+        if ($inject_html) {
+            $this->load->view("inc/frontend/inject_html");
+        }
+
         $this->load->view($view);
         $this->load->view('inc/frontend/footer');
     }

@@ -67,6 +67,9 @@ $route['admin/pengguna/save/(:any)'] = 'admin/user/save/$1';
 $route['admin/pengguna/update/(:any)'] = 'admin/user/save/$1';
 
 
+$route['persebaran'] = 'home/persebaran';
+
+
 $route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
