@@ -38,7 +38,7 @@
                 <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                     <ul class="nav navbar-nav menu_nav ml-auto">
                         <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about.html">Tentang</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link" href="about.html">Tentang</a></li> -->
                         <li class="nav-item"><a class="nav-link" href="<?= base_url('persebaran'); ?>">Persebaran</a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= base_url('daftar-tps'); ?>">Daftar TPS</a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= base_url('kontak'); ?>">Kontak</a></li>

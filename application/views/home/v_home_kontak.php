@@ -1,53 +1,45 @@
-<div class="section-wrap gmap">
-    <!-- SECTION -->
-    <div class="section void">
-        <!-- CONTACT ACTIONS -->
-        <div class="contact-actions">
-            <!-- CONTACT FORM -->
-            <div class="contact-form">
-                <h2 class="subsection-title">Kirim Pesan / Kritik</h2>
-                <hr class="line-separator">
-                <!-- FORM -->
-                <form action="<?= base_url("kontak/save"); ?>" method="post" id="form-contact">
-                    <?= csrf_field("csrf_protection"); ?>
-                    <!-- FORM ROW -->
-                    <div class="form-row">
-                        <div class="half">
-                            <label for="nama" class="rl-label">Nama</label>
-                            <input type="text" id="nama" name="nama" placeholder="Nama Lengkap" required>
-                        </div>
-                        <div class="half">
-                            <label for="email" class="rl-label">Email</label>
-                            <input type="text" id="email" name="email" placeholder="Email Valid.." required>
-                        </div>
-                    </div>
-                    <!-- /FORM ROW -->
-
-                    <!-- FORM ROW -->
-                    <div class="form-row">
-                        <label for="pesan" class="rl-label">Pesan</label>
-                        <textarea id="pesan" name="pesan" placeholder="Tulis Pesan disini" required></textarea>
-                    </div>
-                    <!-- /FORM ROW -->
-
-                    <!-- FORM ROW -->
-                    <div class="form-row separated">
-                        <button class="submit" id="btn-submit">Kirim Pesan</button>
-                    </div>
-                    <!-- /FORM ROW -->
-                </form>
-                <!-- /FORM -->
-            </div>
-            <!-- /CONTACT FORM -->
+<section class="breadcrumb_area">
+    <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+    <div class="container">
+        <div class="page-cover text-center">
+            <h2 class="page-cover-tittle"><?= $title; ?></h2>
+            <ol class="breadcrumb">
+                <li><a href="<?= base_url(); ?>">Home</a></li>
+                <li class="active"><?= $title; ?></li>
+            </ol>
         </div>
-        <!-- /CONTACT ACTIONS -->
     </div>
-    <!-- /SECTION -->
+</section>
+<section class="about_history_area section_gap">
+    <div class="container">
+        <h2 class="title title_color">Kontak / Kritik</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <form class="row contact_form" action="<?= base_url("kontak/save"); ?>" method="post" id="form-contact">
+                    <?= csrf_field("csrf_protection"); ?>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="nama" name="nama" required placeholder="Nama">
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" id="email" name="email" required placeholder="Email">
+                        </div>
 
-    <!-- CONTACT MAP -->
-    <div class="contact-map contact-images"></div>
-    <!-- /CONTACT MAP -->
-</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <textarea class="form-control" name="pesan" id="pesan" rows="" placeholder="pesan"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-right">
+                        <button type="submit" value="submit" class="btn theme_btn button_hover">Kirim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
 <script src="<?= base_url('assets/js/sweetalert2/sweetalert2.all.min.js'); ?>"></script>
 <script>
     $(document).ready(function() {

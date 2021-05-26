@@ -34,7 +34,7 @@
                     <tbody>
                         <?php
                         if (!empty($tps)) {
-                            $baseurl = base_url("admin/tps");
+                            $baseurl = base_url();
                             $no = 1;
                             foreach ($tps as $key => $value) {
                                 $id = encode($value['id_tps']);
@@ -46,8 +46,8 @@
                                 echo "<td>$value[telp]</td>";
                                 echo "<td>" . tgl_jam_indo($value["updated_at"]) . "</td>";
                                 echo "<td class='text-center'>";
-                                echo "<a href='$baseurl/view/$id' class='btn btn-info btn-sm mx-1 my-1'><i class='fas fa-eye'></i></a>";
-                                echo "<a href='$baseurl/edit/$id' class='btn btn-warning btn-sm mx-1 my-1'><i class='fas fa-edit'></i></a>";
+                                echo "<a href='" . $baseurl . "detail-tps/$id' class='btn btn-info btn-sm mx-1 my-1'><i class='fas fa-eye'></i></a>";
+                                echo "<a href='" . $baseurl . "admin/tps/edit/$id' class='btn btn-warning btn-sm mx-1 my-1'><i class='fas fa-edit'></i></a>";
                                 echo "<a href='javascript:void(0)' data-id='" . encode($value['id_tps']) . "' class='btn btn-danger btn-sm mx-1 my-1 btn-delete'><i class='fas fa-trash'></i></a>";
                                 echo "</td>";
                                 echo "</tr>";

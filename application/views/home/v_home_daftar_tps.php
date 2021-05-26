@@ -18,7 +18,6 @@
                 <div class="blog_left_sidebar">
 
                     <?php
-
                     if (!empty($tps)) {
                         foreach ($tps as $key => $value) : ?>
                             <article class="row blog_item">
