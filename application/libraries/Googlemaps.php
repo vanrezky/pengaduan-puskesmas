@@ -49,7 +49,7 @@ class Googlemaps
     var $jsfile                        = '';                        // Set this to the path of an external JS file if you wish the JavaScript to be placed in a file rather than output directly into the <head></head> section. The library will try to create the file if it does not exist already. Please ensure the destination file is writeable
     var $kmlLayerURL                = '';                        // A URL to publicly available KML or GeoRSS data for displaying geographic information. Multiple KML layers can be passed in by using an array of URL's. Note, if using multiple you'll probably have to set $kmlLayerPreserveViewport to true and manually set map center and zoom
     var $kmlLayerPreserveViewport    = FALSE;                    // Specifies whether the map should be adjusted to the bounds of the KmlLayer's contents. By default the map is zoomed and positioned to show the entirety of the layer's contents
-    var $language                    = 'indonesia';                        // The map will by default load in the language of the browser. This can be overriden however here. For a full list of codes see https://spreadsheets.google.com/pub?key=p9pdwsai2hDMsLkXsoM05KQ&gid=1
+    var $language                    = 'id';                        // The map will by default load in the language of the browser. This can be overriden however here. For a full list of codes see https://spreadsheets.google.com/pub?key=p9pdwsai2hDMsLkXsoM05KQ&gid=1
     var $loadAsynchronously            = FALSE;                    // Load the map and API asynchronously once the page has loaded
     var $map_div_id                    = "map_canvas";                // The ID of the <div></div> that is output which contains the map
     var $map_height                    = "550px";                    // The height of the map container. Any units (ie 'px') can be used. If no units are provided 'px' will be presumed
@@ -83,7 +83,7 @@ class Googlemaps
     var    $panoramio                    = FALSE;                    // If TRUE will add photos from Panoramio as a layer to your maps as a series of large and small photo icons
     var    $panoramioTag                = '';                        // Restrict the set of Panoramio photos shown to those matching a certain textual tag
     var    $panoramioUser                = '';                        // Restrict the set of Panoramio photos shown to those matching a particular user
-    var $region                        = '';                        // Country code top-level domain (eg "uk") within which to search. Useful if supplying addresses rather than lat/longs
+    var $region                        = 'ID';                        // Country code top-level domain (eg "uk") within which to search. Useful if supplying addresses rather than lat/longs
     var $scaleControlPosition        = '';                        // The position of the Scale control, eg. 'BOTTOM_RIGHT'
     var $scrollwheel                = TRUE;                        // If set to FALSE will disable zooming by scrolling of the mouse wheel
     var $sensor                        = FALSE;                    // Set to TRUE if being used on a device that can detect a users location

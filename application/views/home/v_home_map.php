@@ -1,39 +1,48 @@
+<section class="breadcrumb_area">
+    <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+    <div class="container">
+        <div class="page-cover text-center">
+            <h2 class="page-cover-tittle"><?= $title; ?></h2>
+            <ol class="breadcrumb">
+                <li><a href="<?= base_url(); ?>">Home</a></li>
+                <li class="active"><?= $title; ?></li>
+            </ol>
+        </div>
+    </div>
+</section>
+<!--================ About History Area  =================-->
+<section class="about_history_area section_gap">
+    <div class="container">
+        <div class="mb-5">
+            <input type="text" id="myPlaceTextBox" class="form-control">
+        </div>
+        <div class="row">
+            <div class="col-md-4 d_flex" id="layout-info" style="display:none;">
+                <div class="about_content ">
+                    <h2 class="title title_color">Tentang TPS</h2>
+                    <p>Tempat pembuangan sampah akhir (TPA) suatu area tanah atau galian yang menerima sampah rumah tangga atau jenis sampah lainnya yang tidak berbahaya, seperti sampah padat komersial, limbah lumpur/endapan dan limbah padat industri yang tidak mengandung bahan kimia berbahaya.</p>
+                </div>
+            </div>
+
+            <div class="col-md-12" id="layout-map">
+                <?= $map['html']; ?>
+                <div id="directionsDiv"></div>
+            </div>
+        </div>
+    </div>
+</section>
 <style>
-    .media {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-align: start;
-        -ms-flex-align: start;
-        align-items: flex-start;
-    }
-
-    .media-object {
-        max-width: 100px;
-        border-radius: 4px;
-        margin-right: 10px;
-    }
-
-    .media-body {
-        -webkit-box-flex: 1;
-        -ms-flex: 1;
-        flex: 1;
-    }
-
     .auto-map-position {
         cursor: pointer;
     }
-
-    .auto-map-position:hover {
-        text-decoration: underline;
-    }
 </style>
+<?= $map['js']; ?>
+<script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/44/14/intl/en_gb/geometry.js"></script>
+<script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/44/14/intl/en_gb/directions.js"></script>
 <script>
-    let marker; // global new marker
-    let terdekat = []; // global terdekat
-    let centreGot = false;
-
-
+    let markerPositionUser; // global new marker
+    let latLngPositionUser = null;
+    let closestLocation = [];
 
     $(document).ready(function(e) {
 
@@ -43,6 +52,14 @@
             google.maps.event.trigger(autoMarker, 'click');
 
         });
+
+        $(document).on('click', '.cari-rute', function(e) {
+            e.preventDefault();
+            var start = latLngPositionUser.lat() + ',' + latLngPositionUser.lng();
+            var end = $(this).data('destination').toString().replace(/[^a-z0-9,. ]/gi, "");
+            calcRoute(start, end);
+        });
+
     });
     // klik peta
     function mapClicked(markerOptions) {
@@ -55,184 +72,169 @@
         createMarker(markerOptions);
     }
 
-    // get location
-    // function myFunction() {
-    //     if (navigator.geolocation) {
-    //         navigator.geolocation.getCurrentPosition(getPosition, showError);
-    //     } else {
-    //         alert("Geolocation is not supported by this browser.");
-    //     }
-    // }
-
-    function showPosition(userLatitude, userLongitude) {
-        lat = userLatitude;
-        lon = userLongitude;
-        latlon = new google.maps.LatLng(lat, lon);
-        map.panTo(latlon);
-    }
-
-    function getPosition(position) {
-        UserLatitude = position.coords.latitude;
-        UserLongitude = position.coords.longitude;
-        showPosition(UserLatitude, UserLongitude);
-    }
-
-    function showError(error) {
-        switch (error.code) {
-            case error.PERMISSION_DENIED:
-                alert("User denied the request for Geolocation.");
-                break;
-            case error.POSITION_UNAVAILABLE:
-                alert("Location information is unavailable.")
-                break;
-            case error.TIMEOUT:
-                alert("The request to get user location timed out.")
-                break;
-            case error.UNKNOWN_ERROR:
-                alert("An unknown error occurred.")
-                break;
-        }
-    }
-
-
     // buat marker
     function createMarker(markerOptions) {
-        if (marker == undefined) {
-            marker = new google.maps.Marker(markerOptions);
+        var markerPosition = markerOptions.position;
+
+        if (!markerPositionUser) {
+            markerPositionUser = new google.maps.Marker(markerOptions);
+
         } else {
-            marker.setPosition(markerOptions.position);
+            markerPositionUser.setPosition(markerPosition);
         }
 
-        // animasi center
-        map.panTo(markerOptions.position);
-
-        find_closest_marker(markerOptions);
-        return marker;
-
+        latLngPositionUser = markerPosition;
+        map.panTo(markerPosition);
+        // cari marker terdekat
+        find_closest_marker();
+        return false;
     }
 
-    function rad(x) {
-        return x * Math.PI / 180;
+    // cari lokasi atau marker terdekat
+    function find_closest_marker() {
+        var numberOfResults = 25;
+        var numberOfDrivingResults = 5;
+
+        closestLocation = findClosestN(latLngPositionUser, numberOfResults);
+        // get driving distance
+        closestLocation = closestLocation.splice(0, numberOfResults);
+        calculateDistances(latLngPositionUser, closestLocation, numberOfDrivingResults);
     }
 
-    function find_closest_marker(event) {
-        var lat = event.position.lat();
-        var lng = event.position.lng();
-        var R = 6371; // radius of earth in km
-        var distances = [];
-        var closest = -1;
-        terdekat = [];
+
+    function findClosestN(pt, numberOfResults) {
+
+        closestLocation = [];
+
         for (i = 0; i < markers_map.length; i++) {
-            var mlat = markers_map[i].position.lat();
-            var mlng = markers_map[i].position.lng();
-            var title = markers_map[i].title;
-            var dLat = rad(mlat - lat);
-            var dLong = rad(mlng - lng);
-            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(rad(lat)) * Math.cos(rad(lat)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            var d = R * c;
-            distances[i] = d;
 
-            //tambahkan jarak ke dalam marker
-            markers_map[i].distance = d;
-            // tambahkan parameter marker-map-auto
+            var tpsLatLng = markers_map[i].getPosition();
+
+            markers_map[i].distance = google.maps.geometry.spherical.computeDistanceBetween(pt, tpsLatLng);
             markers_map[i].marker_map_auto = 'marker_' + i;
-
-            // masukkan ke terdekat
-            terdekat.push(markers_map[i]);
-
-            if (closest == -1 || d < distances[closest]) {
-                closest = i;
-            }
+            markers_map[i].tpsLatLng = tpsLatLng;
+            closestLocation.push(markers_map[i]);
         }
+        closestLocation.sort(sortByDist);
+        // console.log(closestLocation);
+        return closestLocation;
+    }
 
-        terdekat.sort(function(a, b) {
-            return a.distance - b.distance;
+    function sortByDist(a, b) {
+        return (a.distance - b.distance)
+    }
+
+    function calculateDistances(pt, closest, numberOfResults) {
+        var service = new google.maps.DistanceMatrixService();
+        var request = {
+            origins: [pt],
+            destinations: [],
+            travelMode: google.maps.TravelMode.DRIVING,
+            unitSystem: google.maps.UnitSystem.METRIC,
+            avoidHighways: false,
+            avoidTolls: false
+        };
+        for (var i = 0; i < closest.length; i++) {
+            request.destinations.push(closest[i].getPosition());
+        }
+        service.getDistanceMatrix(request, function(response, status) {
+            if (status != google.maps.DistanceMatrixStatus.OK) {
+                alert('Error was: ' + status);
+            } else {
+                var origins = response.originAddresses;
+                var destinations = response.destinationAddresses;
+                // var outputDiv = document.getElementById('side_bar');
+                // outputDiv.innerHTML = '';
+
+                var results = response.rows[0].elements;
+                // save title and address in record for sorting
+                for (var i = 0; i < closest.length; i++) {
+                    results[i].title = closest[i].title;
+                    results[i].address = closest[i].address;
+                    results[i].marker_map_auto = closest[i].marker_map_auto;
+                    results[i].tpsLatLng = closest[i].tpsLatLng;
+                }
+                results.sort(sortByDistDM);
+
+                tampilkan(results);
+                initLayout("open");
+            }
         });
+    }
 
-        console.log(terdekat);
-
-        // alert(markers_map[closest].title);
-        tampilkan(terdekat);
-        initLayout("open");
+    function sortByDistDM(a, b) {
+        return (a.distance.value - b.distance.value)
     }
 
     // tampikan lokasi terdekat
     function initLayout(tipe) {
-
         let layoutInfo = $("#layout-info");
         let layoutMap = $("#layout-map");
 
-        if (tipe == 'open') {
-            layoutMap.removeClass('col-md-12').addClass('col-md-8');
+        if (tipe == "open") {
+            layoutMap.removeClass("col-md-12").addClass("col-md-8");
             layoutInfo.show();
-        } else if (tipe == 'close') {
-            layoutMap.removeClass('col-md-8').addClass('col-md-12');
-            layoutInfo.addClass('hidden');
+        } else if (tipe == "close") {
+            layoutMap.removeClass("col-md-8").addClass("col-md-12");
+            layoutInfo.addClass("hidden");
         }
 
-        return false
+        return false;
     }
 
     function tampilkan(terdekat) {
         let html = '<div class="list-group">';
 
         $.each(terdekat, function(indexInArray, valueOfElement) {
-
+            // position = valueOfElement.position.toString().replace(/[^a-z0-9,. ]/gi, "");
+            position = valueOfElement.tpsLatLng;
             html += '<div href="#" class="list-group-item">';
-            html += '<h4 data-automarker="' + valueOfElement.marker_map_auto + '" class="auto-map-position">' + valueOfElement.title + '</h4>';
-            html += '<p>Jarak : ' + valueOfElement.distance.toFixed(2) + ' Km </p>';
-            html += '<a href="" class=""><span class="s-icon-lonely icon-arrow-right-circle"> Rute</span> </a>';
-            html += '</div>';
+            html += '<h4 data-automarker="' + valueOfElement.marker_map_auto + '" class="auto-map-position">' + valueOfElement.title + "</h4>";
+            html += "<p>Jarak : " + valueOfElement.distance.text + "</p>";
+            html += '<a href="javscript:void(0);" class="genric-btn danger radius small cari-rute" data-destination="' + position + '"><i class="icon-arrow-right-circle"></i> Rute</a>';
+            html += "</div>";
             // html += valueOfElement.content;
-
         });
-        html += '</div>';
+        html += "</div>";
 
         $("#layout-info").empty().append(html);
         return false;
+    }
+
+    //define calcRoute function
+    function calcRoute(start, end) {
+        //create request
+        var request = {
+            origin: start,
+            destination: end,
+            travelMode: google.maps.TravelMode.DRIVING, //WALKING, BYCYCLING, TRANSIT
+            unitSystem: google.maps.UnitSystem.METRIC
+        }
+
+        //pass the request to the route method
+        directionsService.route(request, function(result, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+
+                //Get distance and time
+                // const output = document.querySelector('#output');
+                // output.innerHTML = "<div class='alert-info'>From: " + document.getElementById("from").value + ".<br />To: " + document.getElementById("to").value + ".<br /> Driving distance <i class='fas fa-road'></i> : " + result.routes[0].legs[0].distance.text + ".<br />Duration <i class='fas fa-hourglass-start'></i> : " + result.routes[0].legs[0].duration.text + ".</div>";
+
+                //display route
+                console.log(result);
+                directionsDisplay.setDirections(result);
+            } else {
+                //delete route from map
+                directionsDisplay.setDirections({
+                    routes: []
+                });
+                //center map in London
+                map.setCenter(myLatLng);
+
+                //show error message
+                output.innerHTML = "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Could not retrieve driving distance.</div>";
+            }
+        });
 
     }
 </script>
-<?= $map['js']; ?>
-<div class="section-navigation-wrap">
-    <!-- SECTION NAVIGATION -->
-    <div class="section-navigation">
-        <!-- SECTION NAVIGATION PATH -->
-        <p class="section-navigation-path">
-            <span class="path">Home</span>
-            <span class="path bold">
-                <!-- SVG ARROW -->
-                <svg class="svg-arrow tiny">
-                    <use xlink:href="#svg-arrow"></use>
-                </svg>
-                <!-- /SVG ARROW -->
-            </span>
-            <span class="path current">Persebaran</span>
-        </p>
-        <!-- SECTION NAVIGATION PATH -->
-    </div>
-    <!-- /SECTION NAVIGATION -->
-</div>
-<div class="section-wrap">
-    <!-- FEATURES SECTION -->
-    <div class="features-section section">
-        <h4 class="title large"><?= $pengaturan['nama_website']; ?></h4>
-        <hr class="line-separator">
-        <div style="margin-bottom:30px">
-            <input type="text" id="myPlaceTextBox" class="form-control">
-            <!-- <button onclick="myFunction()">Posisi Saya</button> -->
-        </div>
-
-
-        <!-- BG DECORATION -->
-        <div class="row">
-            <div class="col-md-4" id="layout-info" style="display:none;"></div>
-            <div class="col-md-12" id="layout-map">
-                <?= $map['html']; ?>
-            </div>
-        </div>
-    </div>
-    <!-- /FEATURES SECTION -->
-</div>
+<!--================ About History Area  =================-->

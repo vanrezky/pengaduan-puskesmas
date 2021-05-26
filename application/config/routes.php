@@ -68,6 +68,13 @@ $route['admin/pengguna/update/(:any)'] = 'admin/user/save/$1';
 
 
 $route['persebaran'] = 'home/persebaran';
+$route['persebaran/(:any)'] = 'home/persebaran/$1';
+$route['daftar-tps'] = 'home/daftarTps';
+$route['detail-tps/(:any)'] = 'home/detailTps/$1';
+$route['daftar-tps/(:num)'] = 'home/daftarTps';
+$route['kontak'] = 'home/kontak';
+$route['kontak/save'] = 'home/save_kontak';
+$route['rute/(:any)'] = 'home/rute/$1';
 
 
 $route['default_controller'] = 'home';

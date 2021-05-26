@@ -1,57 +1,18 @@
-<!-- MAIN SLIDER -->
-<div class="main-slider">
-    <!-- SLIDER CONTROLS -->
-    <div class="slider-controls">
-        <!-- SLIDER CONTROL -->
-        <div class="slider-control"></div>
-        <!-- SLIDER CONTROL -->
-
-        <!-- SLIDER CONTROL -->
-        <div class="slider-control"></div>
-        <!-- SLIDER CONTROL -->
-
-    </div>
-    <!-- /SLIDER CONTROLS -->
-
-    <!-- SLIDE LIST -->
-    <div class="slide-list">
-        <!-- SLIDE -->
-        <div class="slide slide-1">
-            <!-- SLIDE CONTENT WRAP -->
-            <div class="slide-content-wrap">
-                <!-- SLIDE CONTENT -->
-                <div class="slide-content">
-                    <h2 class="banner-title dark large">Customize</h2>
-                    <h2 class="banner-title main medium">Your Helmet</h2>
-                    <h2 class="banner-title micro light">Millions of different posibilities!</h2>
-                </div>
-                <!-- SLIDE CONTENT -->
-            </div>
-            <!-- SLIDE CONTENT WRAP -->
+<div class="aboutus-banner-wrap" style="background-image:url(<?= base_url('assets/frontend/img/home/home.png'); ?>) ;">
+    <div class="aboutus-banner-bg-fill"></div>
+    <!-- ABOUTUS BANNER -->
+    <div class="aboutus-banner">
+        <!-- ABOUTUS BANNER CONTENT -->
+        <div class="aboutus-banner-content">
+            <h6 class="title secondary">Lokasi TPS</h6>
+            <p class="title">Kota Pekanbaru</p>
+            <p>Tempat Pembuangan Sampah (Akhir) adalah tempat untuk menimbun sampah dan merupakan bentuk tertua perlakuan sampah.</p>
+            <a href="<?= base_url("persebaran"); ?>" class="button medium">Lihat Persebaran</a>
         </div>
-        <!-- SLIDE -->
-
-        <!-- SLIDE -->
-        <div class="slide slide-2">
-            <!-- SLIDE CONTENT WRAP -->
-            <div class="slide-content-wrap">
-                <!-- SLIDE CONTENT -->
-                <div class="slide-content">
-                    <h2 class="banner-title small">We have</h2>
-                    <h2 class="banner-title"><span class="highlighted">Incredible</span></h2>
-                    <h2 class="banner-title">Designs</h2>
-                    <h2 class="banner-title micro">Thousands of helmets to choose from!</h2>
-                    <a href="#" class="button">Browse Popular</a>
-                </div>
-                <!-- SLIDE CONTENT -->
-            </div>
-            <!-- SLIDE CONTENT WRAP -->
-        </div>
-        <!-- SLIDE -->
+        <!-- /ABOUTUS BANNER CONTENT -->
     </div>
-    <!-- /SLIDE LIST -->
+    <!-- /ABOUTUS BANNER -->
 </div>
-<!-- /MAIN SLIDER -->
 
 <div class="section-wrap">
     <!-- FEATURES SECTION -->
@@ -64,49 +25,22 @@
         <ul class="feature-list big">
             <!-- FEATURE LIST ITEM -->
             <li class="feature-list-item">
-                <i class="s-icon icon-energy"></i>
-                <p class="title">Ultra Durability</p>
-                <p>Lorem ipsum dolor sit amet, consecteture ipisicing elit, sed dorem eiusmod tempor incididunt ut labore et dolore.</p>
-            </li>
-            <!-- /FEATURE LIST ITEM -->
-
-            <!-- FEATURE LIST ITEM -->
-            <li class="feature-list-item">
-                <i class="s-icon icon-drop"></i>
-                <p class="title">Water Resistant</p>
-                <p>Lorem ipsum dolor sit amet, consecteture ipisicing elit, sed dorem eiusmod tempor incididunt ut labore et dolore.</p>
-            </li>
-            <!-- /FEATURE LIST ITEM -->
-
-            <!-- FEATURE LIST ITEM -->
-            <li class="feature-list-item">
                 <i class="s-icon icon-star"></i>
-                <p class="title">Super Comfort</p>
-                <p>Lorem ipsum dolor sit amet, consecteture ipisicing elit, sed dorem eiusmod tempor incididunt ut labore et dolore.</p>
+                <p class="title">Mudah Digunakan</p>
+                <p>Sistem Informasi Geografis ini sangat mudah digunakan, bahkan bagi yang tidak mengenal sistem sekalipun.</p>
             </li>
             <!-- /FEATURE LIST ITEM -->
 
             <!-- FEATURE LIST ITEM -->
             <li class="feature-list-item">
                 <i class="s-icon icon-rocket"></i>
-                <p class="title">Special Designs</p>
-                <p>Lorem ipsum dolor sit amet, consecteture ipisicing elit, sed dorem eiusmod tempor incididunt ut labore et dolore.</p>
+                <p class="title">Web Responsive</p>
+                <p>Sistem Informasi Geografis ini sudah responsive, sehingga kamu dapat mengakses melalui smartphone kamu</p>
             </li>
-            <!-- /FEATURE LIST ITEM -->
-
-            <!-- FEATURE LIST ITEM -->
             <li class="feature-list-item">
-                <i class="s-icon icon-like"></i>
-                <p class="title">Quality Warranty</p>
-                <p>Lorem ipsum dolor sit amet, consecteture ipisicing elit, sed dorem eiusmod tempor incididunt ut labore et dolore.</p>
-            </li>
-            <!-- /FEATURE LIST ITEM -->
-
-            <!-- FEATURE LIST ITEM -->
-            <li class="feature-list-item">
-                <i class="s-icon icon-wrench"></i>
-                <p class="title">Product Builder</p>
-                <p>Lorem ipsum dolor sit amet, consecteture ipisicing elit, sed dorem eiusmod tempor incididunt ut labore et dolore.</p>
+                <i class="s-icon icon-map"></i>
+                <p class="title">Lokasi Akurat</p>
+                <p>Memberikan akurasi ketepatan mengenai lokasi tempat pembuangan sampah, serta memberikan arah lokasi terbaik</p>
             </li>
             <!-- /FEATURE LIST ITEM -->
         </ul>
@@ -137,4 +71,3 @@
     <!-- /ACTION POSTER -->
 </div>
 <!-- /ACTION POSTER WRAP -->
-<script src="<?= base_url("/assets/frontend/"); ?>js/xmslider.js"></script>

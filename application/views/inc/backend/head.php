@@ -26,4 +26,5 @@
     <!-- <script src="<?= base_url(); ?>assets/sweet_alert/sweetalert.min.js"></script> -->
     <!-- js maps -->
     <?= isset($map['js']) ? $map['js'] : ""; ?>
+    <link rel="icon" href="<?= base_url('assets/img/'); ?>fav.png">
 </head>
