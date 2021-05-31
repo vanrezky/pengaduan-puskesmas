@@ -81,7 +81,7 @@
             map: map,
             position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
             icon: {
-                url: 'https://gis.test/gis-tpa/assets/img/icon/me.png'
+                url: 'https://gis.test/gis-tpa/assets/img/icon/me.png?raw=true'
             },
             animation: google.maps.Animation.BOUNCE,
             optimized: false

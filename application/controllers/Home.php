@@ -26,7 +26,7 @@ class Home extends MY_Controller
     public function persebaran($id = "")
     {
         $id = $id  == "" ? "" : decode($id);
-        $globalSettingMarker = "icon:{url:'" . base_url("assets/img/icon/me.png") . "'}, animation: google.maps.Animation.BOUNCE, optimized: false";
+        $globalSettingMarker = "icon:{url:'" . base_url("assets/img/icon/me.png?raw=true") . "'}, animation: google.maps.Animation.BOUNCE, optimized: false";
         // ambil semua tps
         $tps = $this->tpsModel->getData("", "", $id)->result_array();
 
