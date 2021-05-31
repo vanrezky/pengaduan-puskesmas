@@ -43,6 +43,7 @@ class Home extends MY_Controller
         $config['placesAutocompleteOnChange'] = "mapGeometry({ map: map, position:placesAutocomplete.getPlace().geometry.location, $globalSettingMarker});";
         $config['directions'] = TRUE;
         $config['directionsDivID'] = 'directionsDiv';
+        $config['directionsDraggable'] = false;
         $this->googlemaps->initialize($config);
         $HTML = "";
         foreach ($tps as $value) {

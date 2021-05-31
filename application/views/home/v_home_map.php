@@ -50,6 +50,7 @@
     let markerPositionUser; // global new marker
     let latLngPositionUser = null;
     let closestLocation = [];
+    let statusRoutes = false;
 
     $(document).ready(function(e) {
         $(document).on('click', '.auto-map-position', function(e) {
@@ -63,7 +64,7 @@
             e.preventDefault();
             var start = latLngPositionUser.lat() + ',' + latLngPositionUser.lng();
             var end = $(this).data('destination').toString().replace(/[^a-z0-9,. ]/gi, "");
-            calcRoute(start, end);
+            calcRoutes(start, end);
         });
 
     });
@@ -118,6 +119,12 @@
     function find_closest_marker() {
         var numberOfResults = 25;
         var numberOfDrivingResults = 5;
+
+        if (statusRoutes) {
+            directionsDisplay.setDirections({
+                routes: []
+            });
+        }
 
         closestLocation = findClosestN(latLngPositionUser, numberOfResults);
         // get driving distance
@@ -225,8 +232,9 @@
         return false;
     }
 
-    //define calcRoute function
-    function calcRoute(start, end) {
+    //define calcRoutes function
+    function calcRoutes(start, end) {
+        statusRoutes = true;
         //create request
         var request = {
             origin: start,
@@ -253,7 +261,6 @@
                 });
                 //center map in London
                 map.setCenter(myLatLng);
-
                 //show error message
                 output.innerHTML = "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Could not retrieve driving distance.</div>";
             }
