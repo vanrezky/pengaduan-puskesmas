@@ -30,7 +30,7 @@
                             <div class="invalid-feedback" id="feedzoom"></div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputFile">Logo Website</label>
+                            <label for="logo">Logo Website</label>
                             <div class="input-group">
                                 <div class="custom-file">
                                     <input type="file" id="logo" name="logo" class="form-control-file">
@@ -42,6 +42,19 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- <div class="form-group">
+                            <label for="gambar_home">Gambar Home</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" id="gambar_home" name="gambar_home" class="form-control-file">
+                                    <div class="invalid-feedback" id="feedgambar_home"></div>
+                                    <input type="text" name="gambar_menu_delete_foto" value="<?= $pengaturan["logo"] ?>" hidden readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <img class="img-fluid" src="<?= base_url('uploads/img/' . $pengaturan['logo']) ?>" alt="Gambar Home">
+                                </div>
+                            </div>
+                        </div> -->
                         <div class="form-group">
                             <input type="hidden" class="form-control" name="center_map_lat" id="lat" value="<?= $pengaturan["center_map_lat"]; ?>" readonly>
                         </div>
