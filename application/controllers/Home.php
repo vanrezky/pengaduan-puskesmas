@@ -26,7 +26,7 @@ class Home extends MY_Controller
     public function persebaran($id = "")
     {
         $id = $id  == "" ? "" : decode($id);
-        $globalSettingMarker = "icon:userMarker, animation: google.maps.Animation.BOUNCE, optimized: false";
+        $globalSettingMarker = "animation: google.maps.Animation.BOUNCE, optimized: false";
         // ambil semua tps
         $tps = $this->tpsModel->getData("", "", $id)->result_array();
 
@@ -34,7 +34,6 @@ class Home extends MY_Controller
         // $config['directions'] = TRUE;
         // $config['directionsStart'] = '0.5653222492658629, 101.42672880801696';
         // $config['directionsEnd'] = '0.566316846105612, 101.43134562796631';
-        $config['customMarker'] = 'https://gis.test/gis-tpa/assets/img/icon/me.png?raw=true';
         $config['zoom'] = (count($tps) > 1 ? 'auto' : getPengaturanWebsite('zoom'));
         $config['places'] = TRUE;
         $config['disableStreetViewControl'] = true;

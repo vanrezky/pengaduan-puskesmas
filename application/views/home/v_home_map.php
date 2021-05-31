@@ -80,7 +80,7 @@
         var location = {
             map: map,
             position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-            icon: userMarker,
+            // icon: userMarker,
             animation: google.maps.Animation.BOUNCE,
             optimized: false
         }

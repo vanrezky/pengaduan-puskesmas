@@ -152,7 +152,7 @@ class Googlemaps
     var $placesAutocompleteBoundNE    = '';                        // Both South-West (lat/long co-ordinate or address) and North-East (lat/long co-ordinate or address) values are required if wishing to set bounds
     var $placesAutocompleteBoundsMap = FALSE;                    // An alternative to setting the SW and NE bounds is to use the bounds of the current viewport. If set to TRUE, the bounds will be set to the viewport of the visible map, even if dragged or zoomed
     var $placesAutocompleteOnChange    = '';                        // The JavaScript action to perform when a place is selected
-    var $customMarker  = "";
+
     public function __construct($config = array())
     {
         // Get CI object.
@@ -1155,17 +1155,6 @@ class Googlemaps
 			<script type="text/javascript">
 			//<![CDATA[
 			';
-        }
-
-        if ($this->customMarker != "") {
-            $this->output_js_contents .= '
-                    const userMarker = new google.maps.MarkerImage(
-                    "' . $this->customMarker . '",
-                    new google.maps.Size(32, 37),
-                    new google.maps.Point(0, 0),
-                    new google.maps.Point(16, 37)
-                );
-            ';
         }
 
         $this->output_js_contents .= '
