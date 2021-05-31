@@ -34,13 +34,6 @@ class Dashboard extends MY_Controller
 
 		$config['center'] = $this->center;
 		$config['zoom'] = 'auto';
-		// $config['places'] = TRUE;
-		// $config['disableStreetViewControl'] = true;
-		// $config['onclick'] = "mapClicked({ map: map, position:event.latLng, $globalSettingMarker});";
-		// $config['placesAutocompleteInputID'] = 'myPlaceTextBox';
-		// $config['placesAutocompleteBoundsMap'] = TRUE; // set results biased towards the maps viewport
-		// $config['placesAutocompleteOnChange'] = "mapGeometry({ map: map, position:placesAutocomplete.getPlace().geometry.location, $globalSettingMarker});";
-
 		$this->googlemaps->initialize($config);
 		$HTML = "";
 		foreach ($tps as $value) {
@@ -54,11 +47,12 @@ class Dashboard extends MY_Controller
 			$HTML .= "<img src='$gambar' class='media-object' style='width:150px;'>";
 			$HTML .= "</div>";
 			$HTML .= "<div class='media-body'>";
-			$HTML .= "<h4>$value[nama_tps]</h4>";
-			$HTML .= "<ol>";
+			$HTML .= "<ul style='list-style-type:none;'>";
+			$HTML .= "<li><h5>$value[nama_tps]</h5></li>";
 			$HTML .= "<li>ALamat, $value[alamat]</li>";
 			$HTML .= "<li>No Telp, $value[telp]</li>";
-			$HTML .= "</ol>";
+			$HTML .= "<li>Keterangan, $value[keterangan]</li>";
+			$HTML .= "</ul>";
 			$HTML .= "</div>";
 			$HTML .= "</div>";
 

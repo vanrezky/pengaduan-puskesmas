@@ -68,7 +68,7 @@
 
         // lempar newLat dan new Lng ke setMapToForm
         setMapToForm(newLat, newLng);
-        
+
         // animasi
         map.panTo(map.getCenter());
     }
@@ -101,34 +101,51 @@
     //     marker_van.setPosition(latLng);
     // }
 
-    function createMarker_map2(markerOptions) {
-        deleteOneMarker();
-        var marker = new google.maps.Marker(markerOptions);
-        markers_map.push(marker);
-        lat_longs_map.push(marker.getPosition());
-        return marker;
-    }
+    // function createMarker_map2(markerOptions) {
+    //     deleteOneMarker();
+    //     var marker = new google.maps.Marker(markerOptions);
+    //     markers_map.push(marker);
+    //     lat_longs_map.push(marker.getPosition());
+    //     return marker;
+    // }
 
-    function deleteOneMarker() {
-        markers_map[1].setMap(null);
-        markers_map[1].setMap(map);
-    }
+    // function deleteOneMarker() {
+    //     markers_map[1].setMap(null);
+    //     markers_map[1].setMap(map);
+    // }
 
-    function deleteMarkers() {
-        clearMarkers();
-        markers_map = [];
-    }
+    // function deleteMarkers() {
+    //     clearMarkers();
+    //     markers_map = [];
+    // }
 
-    function clearMarkers() {
-        setMapOnAll(null);
-    }
+    // function clearMarkers() {
+    //     setMapOnAll(null);
+    // }
 
     // Sets the map on all markers in the array.
-    function setMapOnAll(map) {
-        console.log(markers_map.length);
-        for (let i = 0; i < markers_map.length; i++) {
-            markers_map[i].setMap(map);
-        }
+    // function setMapOnAll(map) {
+    //     console.log(markers_map.length);
+    //     for (let i = 0; i < markers_map.length; i++) {
+    //         markers_map[i].setMap(map);
+    //     }
+    // }
+    // geometri
+
+    function mapGeometry(markerOptions) {
+        createMarker(markerOptions);
+    }
+
+    // buat marker
+    function createMarker(markerOptions) {
+        var markerPosition = markerOptions.position;
+        console.log(markerPosition);
+
+        marker_van.setPosition(markerPosition);
+        setMapToForm(markerPosition.lat, markerPosition.lng);
+        map.panTo(markerPosition);
+        // cari marker terdekat
+        return false;
     }
 </script>
 

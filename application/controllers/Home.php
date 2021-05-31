@@ -53,13 +53,14 @@ class Home extends MY_Controller
 
             $HTML .= "<div class='media'>";
             $HTML .= "<div class='media-left'>";
-            $HTML .= "<img src='$gambar' class='media-object' style='width:150px;'>";
+            $HTML .= "<img src='$gambar' class='media-object' style='width:150px;border-radius:5px;'>";
             $HTML .= "</div>";
             $HTML .= "<div class='media-body'>";
-            $HTML .= "<h4>$value[nama_tps]</h4>";
-            $HTML .= "<ol>";
+            $HTML .= "<ul style='list-style-type:none;'>";
+            $HTML .= "<li><h4>$value[nama_tps]</h4></li>";
             $HTML .= "<li>ALamat, $value[alamat]</li>";
             $HTML .= "<li>No Telp, $value[telp]</li>";
+            $HTML .= "<li>Keterangan, $value[keterangan]</li>";
             $HTML .= "</ol>";
             $HTML .= "</div>";
             $HTML .= "</div>";

@@ -14,7 +14,14 @@
 <section class="about_history_area section_gap">
     <div class="container">
         <div class="mb-5">
-            <input type="text" id="myPlaceTextBox" class="form-control">
+            <div class="row">
+                <div class="col-lg-10 mb-2">
+                    <input type="text" id="myPlaceTextBox" class="form-control">
+                </div>
+                <div class="col-lg-2">
+                    <button class="genric-btn primary radius" onclick="getLocation()"><i class="fa fa-map-marker"></i> Lokasi Saya</button>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-4 d_flex" id="layout-info" style="display:none;">
@@ -45,7 +52,6 @@
     let closestLocation = [];
 
     $(document).ready(function(e) {
-
         $(document).on('click', '.auto-map-position', function(e) {
             e.preventDefault();
             let autoMarker = eval($(this).data('automarker'));
@@ -61,6 +67,37 @@
         });
 
     });
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            alert("Geolocation tidak di dukung pada browser anda!");
+        }
+    }
+
+    function showPosition(position) {
+        var location = {
+            map: map,
+            position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+            icon: {
+                url: 'https://gis.test/gis-tpa/assets/img/icon/me.png'
+            },
+            animation: google.maps.Animation.BOUNCE
+        }
+        createMarker(location);
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(
+            browserHasGeolocation ?
+            "Error: The Geolocation service failed." :
+            "Error: Your browser doesn't support geolocation."
+        );
+        infoWindow.open(map);
+    }
+
     // klik peta
     function mapClicked(markerOptions) {
         createMarker(markerOptions);
@@ -78,11 +115,9 @@
 
         if (!markerPositionUser) {
             markerPositionUser = new google.maps.Marker(markerOptions);
-
         } else {
             markerPositionUser.setPosition(markerPosition);
         }
-
         latLngPositionUser = markerPosition;
         map.panTo(markerPosition);
         // cari marker terdekat

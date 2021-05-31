@@ -34,14 +34,19 @@ class Tps extends MY_Controller
     public function data($param = "")
     {
         $param = !empty($param) ? decode($param) : "";
-
         $config = [
             'map_div_id' => "map-add",
             'map_height' => "600px",
             'center' => (!empty($lat) && !empty($lng)) ? $lat . "," . $lng : '0.5333593798115907,101.43400637930908',
             'zoom' => !empty($pengaturan['zoom']) ? $pengaturan['zoom'] : "12",
             'onclick' => "newLocationClick(event.latLng.lat(), event.latLng.lng());",
-            'disableStreetViewControl' => true
+            'disableStreetViewControl' => TRUE,
+            'places' => TRUE,
+            'placesAutocompleteInputID' => 'myPlaceTextBox',
+            'placesAutocompleteBoundsMap' => TRUE,
+            'placesAutocompleteOnChange' => "mapGeometry({ map: map, position:placesAutocomplete.getPlace().geometry.location});",
+
+
         ];
 
         $this->googlemaps->initialize($config);
@@ -86,9 +91,9 @@ class Tps extends MY_Controller
             $validation->set_rules("id_jenistps", "Jenis TPS", "trim|required", [
                 'required' => "{field} tidak boleh kosong"
             ]);
-            $validation->set_rules("telp", "Telp", "trim|required", [
-                'required' => "{field} tidak boleh kosong"
-            ]);
+            // $validation->set_rules("telp", "Telp", "trim|required", [
+            //     'required' => "{field} tidak boleh kosong"
+            // ]);
             $validation->set_rules("lat", "Latitude", "trim|required", [
                 'required' => "{field} belum diatur, silahkan gerakkan marker atau klik titik tertentu"
             ]);
@@ -103,7 +108,7 @@ class Tps extends MY_Controller
                         'nama_tps' => form_error('nama_tps'),
                         'alamat' => form_error('alamat'),
                         'id_jenistps' => form_error('id_jenistps'),
-                        'telp' => form_error('telp'),
+                        // 'telp' => form_error('telp'),
                         'lat' => form_error('lat'),
                         'lng' => form_error('lng'),
                     ]

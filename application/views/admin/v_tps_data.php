@@ -83,6 +83,9 @@
                     <h6 class="m-0 font-weight-bold text-primary">Peta</h6>
                 </div>
                 <div class="card-body">
+                    <div class="mb-5">
+                        <input type="text" id="myPlaceTextBox" class="form-control">
+                    </div>
                     <?php echo $map['html'] ?>
                 </div>
             </div>
