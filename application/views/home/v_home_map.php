@@ -42,6 +42,12 @@
     .auto-map-position {
         cursor: pointer;
     }
+
+    #layout-info {
+
+        height: 550px;
+        overflow: auto;
+    }
 </style>
 <?= $map['js']; ?>
 <script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/44/14/intl/en_gb/geometry.js"></script>
