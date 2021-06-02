@@ -50,7 +50,8 @@ class Home extends MY_Controller
             $gambar = 'default.jpg';
             if (!empty($value['gambar']))
                 $gambar = base_url("uploads/img/" . $value['gambar']);
-
+            $alamat = str_replace(array("\n", "\r"), '', $value['alamat']);
+            $keterangan = str_replace(array("\n", "\r"), '', $value['keterangan']);
 
             $HTML .= "<div class='media'>";
             $HTML .= "<div class='media-left'>";
@@ -59,9 +60,9 @@ class Home extends MY_Controller
             $HTML .= "<div class='media-body'>";
             $HTML .= "<ul style='list-style-type:none;'>";
             $HTML .= "<li><h4>$value[nama_tps]</h4></li>";
-            $HTML .= "<li>ALamat, $value[alamat]</li>";
+            $HTML .= "<li>ALamat, $alamat</li>";
             $HTML .= "<li>No Telp, $value[telp]</li>";
-            $HTML .= "<li>Keterangan, $value[keterangan]</li>";
+            $HTML .= "<li>Keterangan, $keterangan</li>";
             $HTML .= "</ol>";
             $HTML .= "</div>";
             $HTML .= "</div>";
@@ -151,7 +152,8 @@ class Home extends MY_Controller
                 ];
 
                 $this->googlemaps->initialize($config);
-
+                $alamat = str_replace(array("\n", "\r"), '', $D['alamat']);
+                // $keterangan = str_replace(array("\n", "\r"), '', $D['keterangan']);
                 $HTML = "";
                 $HTML .= "<div class='media'>";
                 $HTML .= "<div class='media-left'>";
@@ -160,7 +162,7 @@ class Home extends MY_Controller
                 $HTML .= "<div class='media-body'>";
                 $HTML .= "<h4>$D[nama_tps]</h4>";
                 $HTML .= "<ol>";
-                $HTML .= "<li>ALamat, $D[alamat]</li>";
+                $HTML .= "<li>ALamat, $alamat</li>";
                 $HTML .= "<li>No Telp, $D[telp]</li>";
                 $HTML .= "</ol>";
                 $HTML .= "</div>";

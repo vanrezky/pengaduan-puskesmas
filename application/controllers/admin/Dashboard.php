@@ -40,7 +40,8 @@ class Dashboard extends MY_Controller
 			$gambar = 'default.jpg';
 			if (!empty($value['gambar']))
 				$gambar = base_url("uploads/img/" . $value['gambar']);
-
+			$alamat = str_replace(array("\n", "\r"), '', $value['alamat']);
+			$keterangan = str_replace(array("\n", "\r"), '', $value['keterangan']);
 
 			$HTML .= "<div class='media'>";
 			$HTML .= "<div class='media-left'>";
@@ -49,9 +50,9 @@ class Dashboard extends MY_Controller
 			$HTML .= "<div class='media-body'>";
 			$HTML .= "<ul style='list-style-type:none;'>";
 			$HTML .= "<li><h5>$value[nama_tps]</h5></li>";
-			$HTML .= "<li>ALamat, $value[alamat]</li>";
+			$HTML .= "<li>ALamat, $alamat</li>";
 			$HTML .= "<li>No Telp, $value[telp]</li>";
-			$HTML .= "<li>Keterangan, $value[keterangan]</li>";
+			$HTML .= "<li>Keterangan, $keterangan</li>";
 			$HTML .= "</ul>";
 			$HTML .= "</div>";
 			$HTML .= "</div>";
