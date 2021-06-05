@@ -39,7 +39,7 @@
                                 echo "<tr>";
                                 echo "<td class='text-center'><img class='img-thumbnail sampul' src='" . base_url("uploads/img/" . $value['gambar']) . "'></td>";
                                 echo "<td>$value[judul]</td>";
-                                echo "<td>$value[nam_kategori]</td>";
+                                echo "<td>$value[nama_kategori]</td>";
                                 echo "<td>$value[created_at]</td>";
                                 echo "<td class='text-center'>";
                                 echo "<a href='" . $baseurl . "backend/berita/edit/$id' class='btn btn-warning btn-sm mx-1 my-1'><i class='fas fa-edit'></i></a>";

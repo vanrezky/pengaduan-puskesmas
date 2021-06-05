@@ -3,40 +3,42 @@
 class M_pengaduan extends CI_Model
 {
 
-    protected static $table = "pengaduan";
-    protected static $primary_key = "id";
-
-    public function getData($per_page = "", $offset = "")
+    public function getData($per_page = "", $offset = "", $id = "")
     {
-        $this->db->select("*");
-        $this->db->order_by($this::$primary_key, "DESC");
-        return $this->db->get($this::$table . " PE", $per_page, $offset);
-    }
-
-    public function getDataLatest($limit = 10)
-    {
-        $this->db->select("PE.*, PA.kode_pasien, PA.nama_pasien, PA.alamat, PA.telp");
-        $this->db->join("pasien PA", "PE.id_pasien = PA.id", "INNER");
-        $this->db->order_by("PE." . $this::$primary_key, "DESC");
-        $this->db->limit($limit);
-        return $this->db->get($this::$table . " PE")->result_array();
+        $this->db->select("pengaduan.*, kategori_pengaduan.nama_kategori");
+        $this->db->join("kategori_pengaduan", "pengaduan.id_kategori = kategori_pengaduan.id", "LEFT");
+        $this->db->order_by("pengaduan.id", "DESC");
+        return $this->db->get('pengaduan', $per_page, $offset);
     }
 
     public function getDataID($id)
     {
         $this->db->select("*");
         if (is_string($id)) {
-            $this->db->where("id", $id);
+            $this->db->where("pengaduan.id", $id);
         }
         if (is_array($id)) {
             $this->db->where($id);
         }
-        return $this->db->get($this::$table . " PE")->row_array();
+        return $this->db->get("pengaduan")->row_array();
     }
 
-    public function deleteData($id)
+    public function deleteDataID($id)
     {
-        $this->db->where($this::$primary_key, $id);
-        return $this->db->delete($this::$table);
+        $this->db->where("pengaduan.id", $id);
+        return $this->db->delete("pengaduan");
+    }
+
+    public function updateDataID($data, $id)
+    {
+        $this->db->where("pengaduan.id", $id);
+        return $this->db->update("pengaduan", $data);
+    }
+
+
+    public function updateKategoriID($data, $id)
+    {
+        $this->db->where("kategori_pengaduan.id", $id);
+        return $this->db->update("kategori_pengaduan", $data);
     }
 }

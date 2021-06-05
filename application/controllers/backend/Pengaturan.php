@@ -7,47 +7,21 @@ class Pengaturan extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->library(array('googlemaps'));
-        $this->load->model('PengaturanModel', 'pengaturanModel');
+        $this->load->model('M_pengaturan', 'pengaturan');
         logged_in();
     }
 
     public function index()
     {
 
-        $pengaturan = $this->pengaturanModel->getData()->row_array();
-        $lat = $pengaturan['center_map_lat'];
-        $lng = $pengaturan['center_map_lng'];
-
-        $config = [
-            'map_div_id' => "map-add",
-            'map_height' => "600px",
-            'center' => (!empty($lat) && !empty($lng)) ? $lat . "," . $lng : '0.5333593798115907,101.43400637930908',
-            'zoom' => !empty($pengaturan['zoom']) ? $pengaturan['zoom'] : "12",
-            'onclick' => "newLocationClick(event.latLng.lat(), event.latLng.lng());",
-        ];
-
-        $this->googlemaps->initialize($config);
-
-        $marker = [
-            'position' => (!empty($lat) && !empty($lng)) ? $lat . "," . $lng : '0.5333593798115907,101.43400637930908',
-            'draggable' => true,
-            'animation' => 'BOUNCE',
-            'icon' => base_url("assets/img/icon/marker.png"),
-            'infowindow_content' => "<div><p>Posisi Kamu</p></div>",
-            'ondragend' => "newLocationDrag(event.latLng.lat(), event.latLng.lng());",
-            'id' => "van",
-        ];
-
-        $this->googlemaps->add_marker($marker);
+        $pengaturan = $this->pengaturan->getData()->row_array();
 
         $data = [
-            'title' => "Data Pengaturan",
+            'title' => "Data Pengaturan Website",
             'pengaturan' => $pengaturan,
-            'map' => $this->googlemaps->create_map(),
         ];
 
-        $this->render("admin/v_pengaturan_index", $data);
+        $this->render("backend/v_pengaturan_index", $data);
     }
 
 
@@ -55,21 +29,21 @@ class Pengaturan extends MY_Controller
     {
         if ($this->input->is_ajax_request()) {
             $pengaturan_id = 1;
-            $pengaturan = $this->db->get_where("tb_pengaturan", ["id" => $pengaturan_id])->row_array();
+            $pengaturan = $this->db->get_where("pengaturan", ["id" => $pengaturan_id])->row_array();
             $csrf = csrf_hash();
 
             $validation = $this->form_validation;
             $validation->set_rules("nama_website", "Nama Website", "trim|required", [
                 'required' => "{field} tidak boleh kosong"
             ]);
+            $validation->set_rules("nama_singkat", "Nama Singkat", "trim|required", [
+                'required' => "{field} tidak boleh kosong"
+            ]);
+            $validation->set_rules("semboyan", "Semboyan", "trim|required", [
+                'required' => "{field} belum diatur, silahkan gerakkan atau klik titik tertentu"
+            ]);
             $validation->set_rules("deskripsi", "Deskripsi Website", "trim|required", [
                 'required' => "{field} tidak boleh kosong"
-            ]);
-            $validation->set_rules("zoom", "Zoom Peta", "trim|required", [
-                'required' => "{field} tidak boleh kosong"
-            ]);
-            $validation->set_rules("center_map_lat", "Posisi tengah peta", "trim|required", [
-                'required' => "{field} belum diatur, silahkan gerakkan atau klik titik tertentu"
             ]);
 
             if ($validation->run() == false) {
@@ -77,10 +51,11 @@ class Pengaturan extends MY_Controller
                     'csrf' => $csrf,
                     'error' => [
                         'nama_website' => form_error('nama_website'),
+                        'nama_singkat' => form_error('nama_singkat'),
+                        'semboyan' => form_error('semboyan'),
                         'deskripsi' => form_error('deskripsi'),
-                        'zoom' => form_error('zoom'),
+
                     ],
-                    'info' => !empty(form_error('center_map_lat')) ? pesan(form_error('center_map_lat'), "danger") : ""
                 ];
             } else {
                 $error_upload = false;
@@ -114,14 +89,13 @@ class Pengaturan extends MY_Controller
 
                     $data = [
                         'nama_website' => $this->input->post("nama_website"),
+                        'nama_singkat' => $this->input->post("nama_singkat"),
+                        'semboyan' => $this->input->post("semboyan"),
                         'deskripsi' => $this->input->post("deskripsi"),
-                        'zoom' => $this->input->post("zoom"),
-                        'center_map_lat' => $this->input->post("center_map_lat"),
-                        'center_map_lng' => $this->input->post("center_map_lng"),
                         'logo' => isset($postLogo['file_name']) ? $postLogo['file_name'] : $pengaturan['logo'],
                     ];
 
-                    $update = $this->db->where("id", $pengaturan_id)->update("tb_pengaturan", $data);
+                    $update = $this->db->where("id", $pengaturan_id)->update("pengaturan", $data);
 
                     if ($update) {
 

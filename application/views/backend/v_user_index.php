@@ -8,7 +8,7 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <div class="float-right">
-                <a href="<?= base_url('admin/pengguna/add') ?>" class="btn btn-primary btn-icon-split btn-sm">
+                <a href="<?= base_url('backend/pengguna/add') ?>" class="btn btn-primary btn-icon-split btn-sm">
                     <span class="icon text-white-50">
                         <i class="fas fa-plus"></i>
                     </span>
@@ -33,10 +33,10 @@
                     <tbody>
                         <?php
                         if (!empty($pengguna)) {
-                            $baseurl = base_url("admin/pengguna");
+                            $baseurl = base_url("backend/pengguna");
                             $no = 1;
                             foreach ($pengguna as $key => $value) {
-                                $id = encode($value['id_user']);
+                                $id = encode($value['id']);
                                 echo "<tr>";
                                 echo "<td>$no</td>";
                                 echo "<td>$value[nama]</td>";
@@ -45,7 +45,7 @@
                                 echo "<td>" . (!empty($value['last_login']) ? tgl_jam_indo($value["last_login"]) : "-") . "</td>";
                                 echo "<td class='text-center'>";
                                 echo "<a href='$baseurl/edit/$id' class='btn btn-warning btn-sm mx-1 my-1'><i class='fas fa-edit'></i></a>";
-                                echo "<a href='javascript:void(0)' data-id='" . encode($value['id_user']) . "' class='btn btn-danger btn-sm mx-1 my-1 btn-delete'><i class='fas fa-trash'></i></a>";
+                                echo "<a href='javascript:void(0)' data-id='" . encode($value['id']) . "' class='btn btn-danger btn-sm mx-1 my-1 btn-delete'><i class='fas fa-trash'></i></a>";
                                 echo "</td>";
                                 echo "</tr>";
                                 $no++;
@@ -77,7 +77,7 @@
 </style>
 <script>
     $(document).ready(function() {
-        const baseurl = "<?= base_url("admin/pengguna/delete"); ?>";
+        const baseurl = "<?= base_url("backend/pengguna/delete"); ?>";
         $(".btn-delete").click(function(e) {
             e.preventDefault();
             let id = $(this).data("id");

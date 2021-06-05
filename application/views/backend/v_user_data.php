@@ -4,12 +4,12 @@
         <div id="form-info"></div>
         <div class="col-lg-12">
             <!-- Basic Card Example -->
-            <form role="form" method="post" id="submit-form" action="<?= base_url(isset($pengguna['id_user']) ? 'admin/pengguna/update/' . encode($pengguna['id_user']) : 'admin/pengguna/save') ?>">
+            <form role="form" method="post" id="submit-form" action="<?= base_url(isset($pengguna['id_user']) ? 'backend/pengguna/update/' . encode($pengguna['id_user']) : 'backend/pengguna/save') ?>">
                 <?= csrf_field("csrf_protection"); ?>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Formulir
-                            <a href="<?= base_url('admin/pengguna/'); ?>" class="btn btn-warning float-right"> Kembali</a>
+                            <a href="<?= base_url('backend/pengguna/'); ?>" class="btn btn-warning float-right"> Kembali</a>
                         </h6>
 
                     </div>

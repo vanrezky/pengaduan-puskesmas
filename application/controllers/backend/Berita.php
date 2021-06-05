@@ -15,7 +15,7 @@ class Berita extends MY_Controller
     public function index()
     {
         $per_page = '10'; #banyaknya data yang ditampilkan
-        $total = $this->berita->getData()->num_rows(); #ambil semua total data tps
+        $total = $this->berita->getData()->num_rows(); #ambil semua total data berita
 
         $data = [
             'title' => "Data Berita",
@@ -45,11 +45,21 @@ class Berita extends MY_Controller
         if ($this->input->is_ajax_request()) {
 
             $param = !empty($param) ? decode($param) : $param;
-            $pasien = $this->pasien->getDataID($param);
+            $berita = $this->berita->getDataID($param);
             $csrf = csrf_hash();
+            $validasiJudul = true;
 
             $validation = $this->form_validation;
-            if (!$param) {
+            // jika data parameter ditemukan
+            if ($param) {
+                // set validasi menjadi false
+                $validasiJudul = false;
+                // jika update data, tetapi judul tidak sama dengan judul post maka lakukan validasi lagi
+                if ($berita['judul'] != $this->input->post("judul")) {
+                    $validasiJudul = true;
+                }
+            }
+            if ($validasiJudul) {
                 $validation->set_rules("judul", "Judul Berita", "trim|required|is_unique[berita.judul]", [
                     'is_unique' => "{field} telah digunakan!",
                     'required' => "{field} tidak boleh kosong"
@@ -69,37 +79,73 @@ class Berita extends MY_Controller
                     ]
                 ];
             } else {
-                // $current_timestamp = current_timestamp();
+                $error_upload = false;
 
-                $data = [
-                    'nama_pasien' => $this->input->post("nama_pasien"),
-                    'jenis_kelamin' => $this->input->post("jenis_kelamin"),
-                    'alamat' => $this->input->post("alamat"),
-                    'telp' => $this->input->post("telp"),
-                ];
+                if (!empty($_FILES['gambar']['name'])) {
+                    $config['upload_path'] = './uploads/img/';
+                    $config['allowed_types'] = 'jpg|png|jpeg';
+                    $config['encrypt_name'] = TRUE;
 
-                if ($param) {
-                    $query = $this->pasien->updateDataID($data, $param);
-                } else {
+                    $this->upload->initialize($config);
 
-                    $data['kode_pasien'] = $this->input->post("kode_pasien");
-
-                    $query = $this->db->insert("pasien", $data);
+                    if (!$this->upload->do_upload('gambar')) {
+                        $error_upload = true;
+                        // kirim pesan error
+                        $msg = [
+                            'csrf' => $csrf,
+                            "error" => [
+                                'judul' => form_error('judul'),
+                                'id_kategori' => form_error('id_kategori'),
+                                'gambar' => $this->upload->display_errors(),
+                            ]
+                        ];
+                    } else {
+                        $postgambar = $this->upload->data();
+                        // hapus gambar lama
+                        if (isset($berita['gambar'])) {
+                            if (file_exists("uploads/img/" . $berita['gambar']) && ($berita['gambar'] != 'default.jpg')) {
+                                unlink("uploads/img/" . $berita['gambar']);
+                            }
+                        }
+                    }
                 }
 
-                if ($query) {
-                    $msg = [
-                        "success" => [
-                            "pesan" => "Data Pasien berhasil disimpan!",
-                            "link" => base_url("backend/pasien"),
-                        ]
-                    ];
-                } else {
+                if ($error_upload === false) {
+                    $current_timestamp = current_timestamp();
 
-                    $msg = [
-                        "csrf" => $csrf,
-                        "info" => "Data gagal disimpan, coba lakukan submit ulang",
+                    $data = [
+                        'judul' => $this->input->post("judul"),
+                        'slug' => url_title($this->input->post('judul'), "-", true),
+                        'id_kategori' => $this->input->post("id_kategori"),
+                        'isi' => $this->input->post("isi"),
+                        'gambar' => isset($postgambar['file_name']) ? $postgambar['file_name'] : "default.jpg",
+                        "updated_at" => $current_timestamp,
                     ];
+
+                    if ($berita) {
+                        $data["gambar"] = isset($postgambar['file_name']) ? $postgambar['file_name'] : $berita['gambar'];
+                        $query = $this->berita->updateDataID($data, $berita['id']);
+                    } else {
+
+                        $data['created_at'] = $current_timestamp;
+
+                        $query = $this->db->insert("berita", $data);
+                    }
+
+                    if ($query) {
+                        $msg = [
+                            "success" => [
+                                "pesan" => "Data Berita berhasil disimpan!",
+                                "link" => base_url("backend/berita"),
+                            ]
+                        ];
+                    } else {
+
+                        $msg = [
+                            "csrf" => $csrf,
+                            "info" => "Data gagal disimpan, coba lakukan submit ulang",
+                        ];
+                    }
                 }
             }
 
@@ -112,11 +158,15 @@ class Berita extends MY_Controller
         $csrf = csrf_hash();
         if ($this->input->is_ajax_request()) {
             $id = decode($id);
-            $pasien = $this->pasien->getDataID($id);
+            $berita = $this->berita->getDataID($id);
 
-            if ($pasien && $id) {
+            if ($berita && $id) {
+                // hapus gambar lama
+                if (file_exists("uploads/img/" . $berita['gambar']) && ($berita['gambar'] != 'default.jpg')) {
+                    unlink("uploads/img/" . $berita['gambar']);
+                }
 
-                $delete = $this->pasien->deleteDataID($id);
+                $delete = $this->berita->deleteDataID($id);
                 if ($delete) {
                     $msg = [
                         "csrf" => $csrf,

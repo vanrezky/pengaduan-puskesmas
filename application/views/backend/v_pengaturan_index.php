@@ -5,9 +5,9 @@
     <div id="form-info"></div>
     <div class="row">
 
-        <div class="col-lg-6">
+        <div class="col-lg-12">
             <!-- Basic Card Example -->
-            <form role="form" method="post" enctype="multipart/form-data" id="submit-form" action="<?= base_url("admin/pengaturan/save"); ?>">
+            <form role="form" method="post" enctype="multipart/form-data" id="submit-form" action="<?= base_url("backend/pengaturan/save"); ?>">
                 <?= csrf_field("csrf_protection"); ?>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
@@ -20,14 +20,19 @@
                             <div class="invalid-feedback" id="feednama_website"></div>
                         </div>
                         <div class="form-group">
+                            <label>Nama Singkatan</label>
+                            <input type="text" class="form-control" name="nama_singkat" id="nama_singkat" value="<?= $pengaturan["nama_singkat"] ?>">
+                            <div class="invalid-feedback" id="feednama_singkat"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Semboyan</label>
+                            <input type="text" class="form-control" name="semboyan" id="semboyan" value="<?= $pengaturan["semboyan"] ?>">
+                            <div class="invalid-feedback" id="feedsemboyan"></div>
+                        </div>
+                        <div class="form-group">
                             <label>Deskripsi Website</label>
                             <textarea class="form-control" name="deskripsi" id="deskripsi" rows="4"><?= $pengaturan["deskripsi"] ?></textarea>
                             <div class="invalid-feedback" id="feeddeskripsi"></div>
-                        </div>
-                        <div class="form-group">
-                            <label>Zoom Peta</label>
-                            <input type="text" class="form-control" name="zoom" id="zoom" value="<?= $pengaturan["zoom"] ?>">
-                            <div class="invalid-feedback" id="feedzoom"></div>
                         </div>
                         <div class="form-group">
                             <label for="logo">Logo Website</label>
@@ -42,25 +47,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="form-group">
-                            <label for="gambar_home">Gambar Home</label>
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" id="gambar_home" name="gambar_home" class="form-control-file">
-                                    <div class="invalid-feedback" id="feedgambar_home"></div>
-                                    <input type="text" name="gambar_menu_delete_foto" value="<?= $pengaturan["logo"] ?>" hidden readonly>
-                                </div>
-                                <div class="col-md-6">
-                                    <img class="img-fluid" src="<?= base_url('uploads/img/' . $pengaturan['logo']) ?>" alt="Gambar Home">
-                                </div>
-                            </div>
-                        </div> -->
-                        <div class="form-group">
-                            <input type="hidden" class="form-control" name="center_map_lat" id="lat" value="<?= $pengaturan["center_map_lat"]; ?>" readonly>
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden" class="form-control" name="center_map_lng" id="lng" value="<?= $pengaturan["center_map_lng"]; ?>" readonly>
-                        </div>
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-info  float-right" id="btn-submit">Submit</button>
@@ -68,9 +54,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-lg-6">
-            <?= $map['html']; ?>
-        </div>
+
     </div>
 </div>
 <script>
@@ -113,12 +97,12 @@
                             $('#feeddeskripsi').html("");
                         }
 
-                        if (response.error.zoom) {
-                            $('#zoom').addClass('is-invalid');
-                            $('#feedzoom').html(response.error.zoom);
+                        if (response.error.nama_singkat) {
+                            $('#nama_singkat').addClass('is-invalid');
+                            $('#feednama_singkat').html(response.error.nama_singkat);
                         } else {
-                            $('#zoom').removeClass('is-invalid');
-                            $('#feedzoom').html("");
+                            $('#nama_singkat').removeClass('is-invalid');
+                            $('#feednama_singkat').html("");
                         }
                         if (response.error.logo) {
                             $('#logo').addClass('is-invalid');
@@ -128,7 +112,7 @@
                             $('#feedlogo').html("");
                         }
                     } else {
-                        // $("#submit-form").find("")
+
                     }
 
                     if (response.info) {

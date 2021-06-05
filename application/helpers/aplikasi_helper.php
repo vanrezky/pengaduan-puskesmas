@@ -229,7 +229,8 @@ function getChildGroupMenu($var, $parent)
 function role_akses()
 {
     return [
-        1 => 'admin'
+        'pimpinan',
+        'petugas'
     ];
 }
 

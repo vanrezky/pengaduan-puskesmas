@@ -7,7 +7,7 @@ class User extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('UserModel', 'userModel');
+        $this->load->model('m_user', 'user');
         logged_in();
     }
 
@@ -15,15 +15,15 @@ class User extends MY_Controller
     {
 
         $per_page = '10'; #banyaknya data yang ditampilkan
-        $total = $this->userModel->getData()->num_rows(); #ambil semua data user
+        $total = $this->user->getData()->num_rows(); #ambil semua data user
 
         $data = [
             'title' => "Data Pengguna (User)",
-            'pagin' => Pagin('admin/pengguna/index', $total, $per_page),
-            'pengguna' => $this->userModel->getData($per_page, Offset())->result_array(),
+            'pagin' => Pagin('backend/pengguna/index', $total, $per_page),
+            'pengguna' => $this->user->getData($per_page, Offset())->result_array(),
         ];
 
-        $this->render('admin/v_user_index', $data);
+        $this->render('backend/v_user_index', $data);
     }
 
     public function data($id = "")
@@ -32,10 +32,10 @@ class User extends MY_Controller
 
         $data = [
             "title" => isset($id) ? "Update Pengguna" : "Tambah Pengguna",
-            "pengguna" => $this->userModel->getDataID($id),
+            "pengguna" => $this->user->getDataID($id),
         ];
 
-        $this->render("admin/v_user_data", $data);
+        $this->render("backend/v_user_data", $data);
     }
 
 
@@ -44,7 +44,7 @@ class User extends MY_Controller
         if ($this->input->is_ajax_request()) {
 
             $id = !empty($id) ? decode($id) : $id;
-            $user = $this->userModel->getDataID($id);
+            $user = $this->user->getDataID($id);
             $csrf = csrf_hash();
 
             $validation = $this->form_validation;
@@ -71,7 +71,7 @@ class User extends MY_Controller
             // set validasi jika perintah berupa insert
             if (!$user) {
 
-                $validation->set_rules("username", "Username", "trim|required|is_unique[tb_user.username]", [
+                $validation->set_rules("username", "Username", "trim|required|is_unique[user.username]", [
                     'required' => "{field} tidak boleh kosong",
                     'is_unique' => "{field} sudah digunakan!"
                 ]);
@@ -101,19 +101,19 @@ class User extends MY_Controller
                     $data['password'] = password_hash($this->input->post("password"), PASSWORD_DEFAULT);
                     $data['created_at'] = current_timestamp();
 
-                    $query = $this->db->insert("tb_user", $data);
+                    $query = $this->db->insert("user", $data);
                 } else {
                     if (!empty($this->input->post("password"))) {
                         $data['password'] = password_hash($this->input->post("password"), PASSWORD_DEFAULT);
                     }
-                    $query = $this->db->where("id_user", $user['id_user'])->update("tb_user", $data);
+                    $query = $this->db->where("id_user", $user['id_user'])->update("user", $data);
                 }
 
                 if ($query) {
                     $msg = [
                         'success' => [
                             'pesan' => 'Pengguna berhasil ditambahkan!',
-                            'link' => base_url("admin/pengguna")
+                            'link' => base_url("backend/pengguna")
                         ]
                     ];
                 } else {

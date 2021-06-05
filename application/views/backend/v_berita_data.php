@@ -37,7 +37,7 @@
 
                         <div class="form-group">
                             <label>Isi Berita</label>
-                            <textarea id="isi" name="isi" class="form-control summernote"><?= isset($news['isi']) ? $news['isi'] : ''; ?></textarea>
+                            <textarea id="isi" name="isi" class="form-control summernote"><?= isset($data['isi']) ? $data['isi'] : ''; ?></textarea>
                             <div class="invalid-feedback" id="feedisi"></div>
                         </div>
                         <div class="row">
@@ -46,13 +46,13 @@
                                     <label>Gambar</label>
                                     <div class="custom-file">
                                         <input type="file" name="gambar" class="custom-file-input" id="gambar" onchange="previewImg('#gambar', '.label-preview-1', '.img-preview-1')">
-                                        <label class="custom-file-label label-preview-1"><?= isset($tps['gambar']) ? $tps['gambar'] : 'Pilih gambar'; ?></label>
+                                        <label class="custom-file-label label-preview-1"><?= isset($data['gambar']) ? $data['gambar'] : 'Pilih gambar'; ?></label>
                                         <div class="invalid-feedback mt-2" id="feedgambar"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <img style="max-width:200px" src="<?= base_url("/uploads/img/" . (isset($tps['gambar']) ? $tps['gambar'] : 'default.jpg')); ?>" alt="preview img" class="img-thumbnail img-preview-1 mt-2">
+                                <img style="max-width:200px" src="<?= base_url("/uploads/img/" . (isset($data['gambar']) ? $data['gambar'] : 'default.jpg')); ?>" alt="preview img" class="img-thumbnail img-preview-1 mt-2">
 
                             </div>
                         </div>
@@ -109,6 +109,7 @@
                     }
 
                     if (response.error) {
+                        Swal.fire("Opps..", "Periksa kembali data yang anda inputkan!", "warning");
                         if (response.error.judul) {
                             $('#judul').addClass('is-invalid');
                             $('#feedjudul').html(response.error.judul);
