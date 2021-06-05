@@ -139,37 +139,6 @@ function logged_in()
     }
 }
 
-function helper_log($tipe = "", $str = "")
-{
-
-    $CI = &get_instance();
-
-    if (strtolower($tipe) == "login") {
-        $log_tipe   = 0;
-    } elseif (strtolower($tipe) == "logout") {
-        $log_tipe   = 1;
-    } elseif (strtolower($tipe) == "add") {
-        $log_tipe   = 2;
-    } elseif (strtolower($tipe) == "edit") {
-        $log_tipe  = 3;
-    } elseif (strtolower($tipe) == "delete") {
-        $log_tipe  = 4;
-    } else {
-        $log_tipe  = 5;
-    }
-
-    // paramter
-    $param['log_user']      = $CI->session->userdata('id_user');
-    $param['log_tipe']      = $log_tipe;
-    $param['log_desc']      = $str;
-
-    //load model log
-    $CI->load->model('m_log');
-
-    //save to database
-    $CI->m_log->save_log($param);
-}
-
 function tgl_jam_indo($tgl)
 {
     $bulan = array(
@@ -192,36 +161,6 @@ function tgl_jam_indo($tgl)
     return $t[2] . ' ' . $bulan[(int) $t[1]] . ' ' . $t[0] . ', ' . $j[0] . ':' . $j[1];
 }
 
-function aktivitas($log_tipe)
-{
-    if ($log_tipe == '0') {
-
-        echo "Login";
-    } else if ($log_tipe == "1") {
-
-        echo "Logout";
-    } else if ($log_tipe == "2") {
-        echo "Tambah Data";
-    } else if ($log_tipe == "3") {
-        echo "Update Data";
-    } else if ($log_tipe == "4") {
-        echo "Delete Data";
-    } else {
-        echo "belum diketahui";
-    }
-}
-
-function role($id)
-{
-    if ($id == '1') {
-
-        echo "Administrator";
-    } else if ($id == "2") {
-
-        echo "Petugas";
-    }
-}
-
 function d($var)
 {
     echo '<pre>' . var_export($var, true) . '</pre>';
@@ -242,10 +181,11 @@ function getMenu($role = "")
         $role = $CI->session->userdata("_user_login")["role"];
     }
 
-    $menu = $CI->db->join('tb_menu', 'tb_menugroup.id_menu = tb_menu.id_menu', 'INNER')
+    $menu = $CI->db->select("menu_group.*, menu.nama_menu, menu.icon, menu.url")
+        ->join('menu', 'menu_group.id_menu = menu.id', 'INNER')
         ->where("role", $role)
         ->order_by("urutan_menu", "ASC")
-        ->get("tb_menugroup")->result_array();
+        ->get("menu_group")->result_array();
 
     $menu_array = [];
     foreach ($menu as $key => $value) {
@@ -268,10 +208,10 @@ function getPengaturanWebsite($field = "")
 {
     $CI = get_instance();
     if ($field != "") {
-        return $CI->db->where("id", 1)->get("tb_pengaturan")->row()->$field;
+        return $CI->db->where("id", 1)->get("pengaturan")->row()->$field;
     }
 
-    return $CI->db->where("id", 1)->get("tb_pengaturan")->row_array();
+    return $CI->db->where("id", 1)->get("pengaturan")->row_array();
 }
 
 function getChildGroupMenu($var, $parent)
@@ -290,5 +230,18 @@ function role_akses()
 {
     return [
         1 => 'admin'
+    ];
+}
+
+function getStatus($status)
+{
+    return "";
+}
+
+function getJenisKelamin()
+{
+    return [
+        'pria',
+        'wanita'
     ];
 }

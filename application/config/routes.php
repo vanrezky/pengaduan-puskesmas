@@ -50,21 +50,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 
-$route['admin'] = 'admin/dashboard';
-$route['admin/tps/add'] = 'admin/tps/data';
-$route['admin/tps/edit/(:any)'] = 'admin/tps/data/$1';
-$route['admin/tps/update/(:any)'] = 'admin/tps/save/$1';
-$route['admin/tps/jenis-save'] = 'admin/tps/jenisSave';
-$route['admin/tps/jenis-save/(:any)'] = 'admin/tps/jenisSave/$1';
-$route['admin/tps/jenis-delete/(:any)'] = 'admin/tps/jenisDelete/$1';
-$route['admin/tps/jenis-get/(:any)'] = 'admin/tps/jenisGet/$1';
+$route['backend'] = 'backend/dashboard';
+$route['backend/pasien/add'] = 'backend/pasien/data';
+$route['backend/pasien/edit/(:any)'] = 'backend/pasien/data/$1';
+$route['backend/pasien/update/(:any)'] = 'backend/pasien/save/$1';
+$route['backend/pasien/jenis-save'] = 'backend/pasien/jenisSave';
+$route['backend/pasien/jenis-save/(:any)'] = 'backend/pasien/jenisSave/$1';
+$route['backend/pasien/jenis-delete/(:any)'] = 'backend/pasien/jenisDelete/$1';
+$route['backend/pasien/jenis-get/(:any)'] = 'backend/tps/jenisGet/$1';
 
-$route['admin/pengguna'] = 'admin/user';
-$route['admin/pengguna/add'] = 'admin/user/data';
-$route['admin/pengguna/edit/(:any)'] = 'admin/user/data/$1';
-$route['admin/pengguna/save'] = 'admin/user/save';
-$route['admin/pengguna/save/(:any)'] = 'admin/user/save/$1';
-$route['admin/pengguna/update/(:any)'] = 'admin/user/save/$1';
+$route['backend/pengguna'] = 'backend/user';
+$route['backend/pengguna/add'] = 'backend/user/data';
+$route['backend/pengguna/edit/(:any)'] = 'backend/user/data/$1';
+$route['backend/pengguna/save'] = 'backend/user/save';
+$route['backend/pengguna/save/(:any)'] = 'backend/user/save/$1';
+$route['backend/pengguna/update/(:any)'] = 'backend/user/save/$1';
+
+
+$route['backend/berita/add'] = 'backend/berita/data';
+$route['backend/berita/edit/(:any)'] = 'backend/berita/data/$1';
+$route['backend/berita/save'] = 'backend/berita/save';
+$route['backend/berita/save/(:any)'] = 'backend/berita/save/$1';
+$route['backend/berita/update/(:any)'] = 'backend/berita/save/$1';
+
+$route['backend/berita/kategori/save'] = 'backend/berita/kategori_save';
+$route['backend/berita/kategori/update/(:any)'] = 'backend/berita/kategori_save/$1';
+$route['backend/berita/kategori/delete/(:any)'] = 'backend/berita/kategori_delete/$1';
 
 
 $route['persebaran'] = 'home/persebaran';

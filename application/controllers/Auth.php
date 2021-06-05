@@ -12,12 +12,12 @@ class Auth extends CI_Controller
     public function index()
     {
         if ($this->session->has_userdata("_user_login")) {
-            $role = $this->session->userdata("_user_login")['role'];
-            redirect("$role/dashboard");
+
+            redirect("backend/dashboard");
         }
 
         $data = [
-            'setting' => $this->db->get('tb_pengaturan')->row_array()
+            'setting' => $this->db->get('pengaturan')->row_array()
         ];
 
         $this->load->view('auth/v_auth_index', $data);
@@ -47,7 +47,7 @@ class Auth extends CI_Controller
                 ];
             } else {
                 // ambil data user berdasarkan username
-                $user = $this->db->get_where("tb_user", ['username' => $this->input->post("username")])->row_array();
+                $user = $this->db->get_where("user", ['username' => $this->input->post("username")])->row_array();
 
                 // jika user ditemukan (true)
                 if ($user) {
@@ -70,13 +70,13 @@ class Auth extends CI_Controller
                         ];
 
                         // update las login
-                        $this->db->where("username", $this->input->post("username"))->update("tb_user", $update);
+                        $this->db->where("username", $this->input->post("username"))->update("user", $update);
 
                         // kirim pesan ke view
                         $msg = [
                             'success' => [
                                 'pesan' => "Anda berhasil login!",
-                                "url" => base_url("$user[role]/dashboard")
+                                "url" => base_url("backend/dashboard")
                             ]
                         ];
                     } else { // jika  password tidak cocok 

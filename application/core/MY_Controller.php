@@ -9,7 +9,6 @@ class MY_Controller extends CI_Controller
 
     function render($view, $data)
     {
-
         $data['pengaturan'] = getPengaturanWebsite();
 
         $this->load->view('inc/backend/head', $data);

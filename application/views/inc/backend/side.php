@@ -10,7 +10,7 @@
           <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
           </div>
-          <div class="sidebar-brand-text mx-3">Backend</div>
+          <div class="sidebar-brand-text mx-3"><?= strtoupper(str_replace("_", " ", $this->session->userdata('_user_login')['role'])); ?></div>
         </a>
 
         <!-- Divider -->
@@ -36,17 +36,18 @@
         if (!empty($menu)) :
           foreach ($menu as $key => $value) :
 
+
             echo "<li class='nav-item'>";
 
             if (empty($value['child'])) {
-              echo "<a class='nav-link collapsed' href='" . base_url($value["role"] . "/" . $value['url_menu']) . "'>";
-              echo "<i class='$value[icon_menu]'></i> ";
+              echo "<a class='nav-link collapsed' href='" . base_url("backend/" . $value['url']) . "'>";
+              echo "<i class='$value[icon]'></i> ";
               echo "<span>$value[nama_menu]</span> ";
               echo "</a>";
             } else {
 
               echo "<a class='nav-link collapsed' href='#' data-toggle='collapse' data-target='#menu-" . $value['id_menu'] . "' aria-expanded='true' aria-controls='menu-" . $value['id_menu'] . "'>";
-              echo "<i class='$value[icon_menu]'></i> ";
+              echo "<i class='$value[icon]'></i> ";
               echo "<span>$value[nama_menu]</span> ";
               echo "</a>";
 
@@ -55,7 +56,7 @@
               echo "<h6 class='collapse-header'>Sub Menu:</h6>";
 
               foreach ($value['child'] as $k => $v) {
-                echo "<a class='collapse-item' href='" . base_url($v["role"] . "/" . $v['url_menu']) . "'>$v[nama_menu]</a>";
+                echo "<a class='collapse-item' href='" . base_url($v["role"] . "/" . $v['url']) . "'>$v[nama_menu]</a>";
               }
 
               echo "</div> ";
