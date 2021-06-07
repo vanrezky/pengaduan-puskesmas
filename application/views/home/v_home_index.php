@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <img class="img-fluid" src="<?= base_url('assets/frontend/'); ?>image/garbage.jpg" alt="img">
+                    <img class="img-fluid" src="<?= base_url('assets/frontend/'); ?>image/puskesmas.jpg" alt="img">
                 </div>
             </div>
         </div>
