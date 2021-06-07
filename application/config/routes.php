@@ -65,6 +65,7 @@ $route['backend/pengguna/edit/(:any)'] = 'backend/user/data/$1';
 $route['backend/pengguna/save'] = 'backend/user/save';
 $route['backend/pengguna/save/(:any)'] = 'backend/user/save/$1';
 $route['backend/pengguna/update/(:any)'] = 'backend/user/save/$1';
+$route['backend/pengguna/delete/(:any)'] = 'backend/user/delete/$1';
 
 
 $route['backend/berita/add'] = 'backend/berita/data';
@@ -77,15 +78,19 @@ $route['backend/berita/kategori/save'] = 'backend/berita/kategori_save';
 $route['backend/berita/kategori/update/(:any)'] = 'backend/berita/kategori_save/$1';
 $route['backend/berita/kategori/delete/(:any)'] = 'backend/berita/kategori_delete/$1';
 
+$route['backend/pengaduan/kategori/save'] = 'backend/pengaduan/kategori_save';
+$route['backend/pengaduan/kategori/update/(:any)'] = 'backend/pengaduan/kategori_save/$1';
+$route['backend/pengaduan/kategori/delete/(:any)'] = 'backend/pengaduan/kategori_delete/$1';
 
-$route['persebaran'] = 'home/persebaran';
-$route['persebaran/(:any)'] = 'home/persebaran/$1';
-$route['daftar-tps'] = 'home/daftarTps';
-$route['detail-tps/(:any)'] = 'home/detailTps/$1';
-$route['daftar-tps/(:num)'] = 'home/daftarTps';
-$route['kontak'] = 'home/kontak';
-$route['kontak/save'] = 'home/save_kontak';
-$route['rute/(:any)'] = 'home/rute/$1';
+
+$route['pengaduan'] = 'home/pengaduan';
+$route['pengaduan/cek'] = 'home/pengaduan_cek';
+$route['pengaduan/save'] = 'home/pengaduan_save';
+$route['berita'] = 'home/berita';
+$route['berita/(:num)'] = 'home/berita/$1';
+$route['berita/(:any)'] = 'home/beritaSingle/$1';
+
+$route['pdf/(:any)'] = 'cetak/index/$1';
 
 
 $route['default_controller'] = 'home';

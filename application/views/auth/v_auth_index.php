@@ -33,7 +33,7 @@
                     <div class="card-body p-0">
                         <div class="row">
                             <div class="col-lg-6 d-none d-lg-block">
-                                <img class="img-fluid" src="<?= base_url('assets/backend/img/login.jpg') ?>">
+                                <img class="img-fluid" src="<?= base_url('assets/backend/img/login.png') ?>">
                             </div>
                             <div class="col-lg-6">
                                 <div class="p-5">

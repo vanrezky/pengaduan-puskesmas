@@ -5,8 +5,8 @@
             <div class="overlay bg-parallax" data-stellar-ratio="0.9" data-stellar-vertical-offset="0" data-background=""></div>
             <div class="container">
                 <div class="banner_content text-center">
-                    <h6>Sistem Informasi Geografis</h6>
-                    <h2>TPS Kota Pekanbaru</h2>
+                    <h6>Sistem Informasi Pengaduan Keluhan Pelayanan</h6>
+                    <h2>Puskesmas Payung Sekaki</h2>
                     <p><?= $pengaturan['deskripsi']; ?></p>
                 </div>
             </div>
@@ -21,8 +21,11 @@
             <div class="row">
                 <div class="col-md-6 d_flex align-items-center">
                     <div class="about_content ">
-                        <h2 class="title title_color">Tentang TPS</h2>
-                        <p>Tempat pembuangan sampah akhir (TPA) suatu area tanah atau galian yang menerima sampah rumah tangga atau jenis sampah lainnya yang tidak berbahaya, seperti sampah padat komersial, limbah lumpur/endapan dan limbah padat industri yang tidak mengandung bahan kimia berbahaya.</p>
+                        <h2 class="title title_color">Tentang Puskesmas</h2>
+                        <p>Puskesmas adalah fasilitas pelayanan kesehatan yang menyelenggarakan upaya kesehatan masyarakat
+                            dan upaya kesehatan perorangan tingkat pertama yang mengutamakan upaya promotif dan preventif,
+                            untuk mencapai derajat kesehatan masyarakat setinggi - tingginya diwilayah kerjanya.
+                            Salah satu upaya pelayanan yang diberikan Puskesmas kepada masyarakat adalah perencanaan, pelaksanaan, evaluasi, pencatatan, dan pelaporan yang dirangkum dalam suatu sistem.</p>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -37,26 +40,27 @@
     <section class="testimonial_area section_gap">
         <div class="container">
             <div class="section_title text-center">
-                <h2 class="title_color">Paling banyak dicari</h2>
-                <p>Lokasi tempat sampah pekanbaru yang paling banyak dicari saat ini.</p>
+                <h2 class="title_color">Artikel Terbaru</h2>
+                <p>Artikel menarik dan terbaru dari kami untuk anda.</p>
             </div>
             <div class="row mb_30">
                 <?php
-                if (!empty($banyakDilihat)) {
-                    foreach ($banyakDilihat as $key => $value) : ?>
+                if (!empty($latest)) {
+                    foreach ($latest as $key => $value) : ?>
 
                         <div class="col-lg-4 col-md-6">
                             <div class="single-recent-blog-post">
                                 <div class="thumb">
-                                    <img class="img-fluid" src="<?= base_url('uploads/img/' . $value['gambar']); ?>" alt="<?= $value['nama_tps']; ?>">
+                                    <img class="img-fluid" src="<?= base_url('uploads/img/' . $value['gambar']); ?>" alt="<?= $value['judul']; ?>">
                                 </div>
                                 <div class="details">
                                     <div class="tags">
-                                        <a href="javascript:void(0);" class="button_hover tag_btn"><?= $value['nama_jenistps']; ?></a>
+                                        <a href="javascript:void(0);" class="button_hover tag_btn"><?= $value['nama_kategori']; ?></a>
                                     </div>
-                                    <a href="<?= base_url('detail-tps/' . encode($value['id_tps'])); ?>">
-                                        <h4 class="sec_h4"><?= $value['nama_tps']; ?></h4>
+                                    <a href="<?= base_url('berita/' . $value['slug']); ?>">
+                                        <h4 class="sec_h4"><?= $value['judul']; ?></h4>
                                     </a>
+                                    <p><?= word_limiter(strip_tags($value['isi']), 20); ?></p>
                                 </div>
                             </div>
                         </div>

@@ -63,6 +63,7 @@ class Auth extends CI_Controller
                         ];
                         // set session
                         $this->session->set_userdata("_user_login", $session);
+                        $this->session->set_userdata("role", $user['role']);
 
                         //  data update last login user
                         $update = [

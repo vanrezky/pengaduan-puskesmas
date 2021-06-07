@@ -3,7 +3,7 @@
 
    <!-- Page Heading -->
    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-     <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+     <h1 class="h4 mb-0 text-gray-800">Sistem Informasi Pengaduan Keluhan Pelayanan Kesehatan Puskesmas Payung Sekaki</h1>
    </div>
 
    <div class="row">
@@ -19,7 +19,7 @@
                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $data['pengaduan']; ?></div>
              </div>
              <div class="col-auto">
-               <i class="fas fa-trash fa-2x text-gray-300"></i>
+               <i class="fas fa-comments fa-2x text-gray-300"></i>
              </div>
            </div>
          </div>
@@ -37,7 +37,7 @@
                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $data['berita']; ?></div>
              </div>
              <div class="col-auto">
-               <i class="fas fa-map-marker-alt fa-2x text-gray-300"></i>
+               <i class="fas fa-newspaper fa-2x text-gray-300"></i>
              </div>
            </div>
          </div>
@@ -82,7 +82,7 @@
                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $data['pasien']; ?></div>
              </div>
              <div class="col-auto">
-               <i class="fas fa-comments fa-2x text-gray-300"></i>
+               <i class="fas fa-stethoscope fa-2x text-gray-300"></i>
              </div>
            </div>
          </div>
@@ -104,30 +104,28 @@
              <table class="table table-bordered">
                <thead>
                  <tr>
+                   <th>No</th>
                    <th>Tanggal Pengaduan</th>
                    <th>Kode Pasien</th>
                    <th>Nama Pasien</th>
                    <th>Pengaduan</th>
                    <th>Status</th>
-                   <th>Aksi</th>
                  </tr>
                </thead>
                <tbody>
                  <?php
-
                   if (!empty($pengaduanLatest)) {
                     $baseurl = base_url("admin/pengaduan?status");
 
                     foreach ($pengaduanLatest as $key => $value) {
+                      $id = encode($value['id']);
                       echo "<tr>";
+                      echo "<td>" . ($key + 1) . "</td>";
                       echo "<td>" . tgl_jam_indo($value['tgl_pengaduan']) . "</td>";
                       echo "<td>$value[kode_pasien]</td>";
                       echo "<td>$value[nama_pasien]</td>";
                       echo "<td>$value[pengaduan]</td>";
-                      echo "<td>" . getStatus($value['status']) . "</td>";
-                      echo "<td class='text-center'>";
-                      echo "<a href='$baseurl/edit/$id' class='btn btn-warning btn-sm mx-1 my-1'><i class='fas fa-edit'></i></a>";
-                      echo "</td>";
+                      echo "<td>" . status_pengaduan($value['status']) . "</td>";
                       echo "</tr>";
                     }
                   } else {

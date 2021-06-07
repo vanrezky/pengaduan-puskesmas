@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="icon" href="<?= base_url('assets/frontend/'); ?>image/favicon.png" type="image/png">
+    <link rel="icon" href="<?= base_url('assets/img/fav.png'); ?>" type="image/png">
     <title><?= $title; ?> | <?= $pengaturan['nama_website']; ?></title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="<?= base_url('assets/frontend/'); ?>css/bootstrap.css">
@@ -37,11 +37,15 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                     <ul class="nav navbar-nav menu_nav ml-auto">
-                        <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>">Home</a></li>
-                        <!-- <li class="nav-item"><a class="nav-link" href="about.html">Tentang</a></li> -->
-                        <li class="nav-item"><a class="nav-link" href="<?= base_url('persebaran'); ?>">Persebaran</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= base_url('daftar-tps'); ?>">Daftar TPS</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= base_url('kontak'); ?>">Kontak</a></li>
+                        <?php
+                        $menu = getMenu("frontend");
+                        $base = base_url("");
+
+                        foreach ($menu as $key => $value) {
+
+                            echo "<li class='nav-item'><a class='nav-link' href='$base{$value['url']}'>$value[nama_menu]</a></li>";
+                        }
+                        ?>
                     </ul>
                 </div>
             </nav>

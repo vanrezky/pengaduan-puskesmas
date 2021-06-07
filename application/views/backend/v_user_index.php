@@ -1,4 +1,5 @@
 <!-- Begin Page Content -->
+<?php $role = $this->session->userdata("role"); ?>
 <div class="container-fluid">
 
     <!-- Page Heading -->
@@ -7,14 +8,16 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <div class="float-right">
-                <a href="<?= base_url('backend/pengguna/add') ?>" class="btn btn-primary btn-icon-split btn-sm">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-plus"></i>
-                    </span>
-                    <span class="text">Add Record</span>
-                </a>
-            </div>
+            <?php if ($role == 'pimpinan') { ?>
+                <div class="float-right">
+                    <a href="<?= base_url('backend/pengguna/add') ?>" class="btn btn-primary btn-icon-split btn-sm">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                        <span class="text">Add Record</span>
+                    </a>
+                </div>
+            <?php } ?>
         </div>
 
         <div class="card-body">
@@ -27,7 +30,7 @@
                             <th>Role</th>
                             <th>Username</th>
                             <th>Login Terakhir</th>
-                            <th>Actions</th>
+                            <?= $role == "pimpinan" ? "<th>Actions</th>" : ""; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,11 +46,15 @@
                                 echo "<td>$value[role]</td>";
                                 echo "<td>$value[username]</td>";
                                 echo "<td>" . (!empty($value['last_login']) ? tgl_jam_indo($value["last_login"]) : "-") . "</td>";
-                                echo "<td class='text-center'>";
-                                echo "<a href='$baseurl/edit/$id' class='btn btn-warning btn-sm mx-1 my-1'><i class='fas fa-edit'></i></a>";
-                                echo "<a href='javascript:void(0)' data-id='" . encode($value['id']) . "' class='btn btn-danger btn-sm mx-1 my-1 btn-delete'><i class='fas fa-trash'></i></a>";
-                                echo "</td>";
+                                if ($role == "pimpinan") {
+                                    echo "<td class='text-center'>";
+                                    echo "<a href='$baseurl/edit/$id' class='btn btn-warning btn-sm mx-1 my-1'><i class='fas fa-edit'></i></a>";
+                                    echo "<a href='javascript:void(0)' data-id='" . encode($value['id']) . "' class='btn btn-danger btn-sm mx-1 my-1 btn-delete'><i class='fas fa-trash'></i></a>";
+                                    echo "</td>";
+                                }
+
                                 echo "</tr>";
+
                                 $no++;
                             }
                         } else {
@@ -102,18 +109,18 @@
                             $(this).removeClass("disabled");
                         },
                         success: function(response) {
+                            console.log(response);
 
                             if (response.csrf) {
                                 $("#csrf_delete").val(response.csrf);
                             }
 
-                            if (response.error) {
-                                Swal.fire("Terjadi galat..!", response.error.pesan, "warning");
-                            }
                             if (response.success) {
-                                Swal.fire("Sukses..!", response.success.pesan, "success").then(() => {
+                                Swal.fire("Sukses..!", response.pesan, "success").then(() => {
                                     location.reload();
                                 });
+                            } else {
+                                Swal.fire("Terjadi galat..!", response.error.pesan, "warning");
                             }
 
                         }

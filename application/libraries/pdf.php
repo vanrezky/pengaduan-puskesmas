@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * CodeIgniter PDF Library
  *
@@ -13,6 +13,7 @@
  */
 
 require_once(dirname(__FILE__) . '/dompdf/autoload.inc.php');
+
 use Dompdf\Dompdf;
 
 class Pdf extends DOMPDF

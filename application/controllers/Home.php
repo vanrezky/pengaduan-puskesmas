@@ -4,258 +4,123 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Home extends MY_Controller
 {
 
-    protected $center;
     function __construct()
     {
         parent::__construct();
-        $this->load->library('googlemaps');
-        $this->load->model('tpsModel');
-        $this->center = getPengaturanWebsite("center_map_lat") . ',' . getPengaturanWebsite("center_map_lng");
+        $this->load->model("m_berita", "berita");
+        $this->load->model("m_pasien", "pasien");
+        $this->load->model("m_pengaduan", "pengaduan");
+        $this->load->helper("tema_helper");
     }
 
     public function index()
     {
         $data = [
             'title' => 'Home',
-            'banyakDilihat' => $this->tpsModel->getDataBanyakDilihat(),
+            'latest' => $this->berita->getLastest(),
         ];
 
         $this->view('home/v_home_index', $data, true);
     }
 
-    public function persebaran($id = "")
-    {
-        $id = $id  == "" ? "" : decode($id);
-        $globalSettingMarker = "animation: google.maps.Animation.BOUNCE, optimized: false";
-        // ambil semua tps
-        $tps = $this->tpsModel->getData("", "", $id)->result_array();
-
-        $config['center'] = (count($tps) == 1 ? $tps[0]['lat'] . ',' . $tps[0]['lng'] : $this->center);
-        // $config['directions'] = TRUE;
-        // $config['directionsStart'] = '0.5653222492658629, 101.42672880801696';
-        // $config['directionsEnd'] = '0.566316846105612, 101.43134562796631';
-        $config['zoom'] = (count($tps) > 1 ? 'auto' : getPengaturanWebsite('zoom'));
-        $config['places'] = TRUE;
-        $config['disableStreetViewControl'] = true;
-        $config['onclick'] = "mapClicked({ map: map, position:event.latLng, $globalSettingMarker});";
-        $config['placesAutocompleteInputID'] = 'myPlaceTextBox';
-        $config['placesAutocompleteBoundsMap'] = TRUE; // set results biased towards the maps viewport
-        $config['placesAutocompleteOnChange'] = "mapGeometry({ map: map, position:placesAutocomplete.getPlace().geometry.location, $globalSettingMarker});";
-        $config['directions'] = TRUE;
-        $config['directionsDivID'] = 'directionsDiv';
-        $config['directionsDraggable'] = false;
-        $this->googlemaps->initialize($config);
-        $HTML = "";
-        foreach ($tps as $value) {
-            $gambar = 'default.jpg';
-            if (!empty($value['gambar']))
-                $gambar = base_url("uploads/img/" . $value['gambar']);
-            $alamat = str_replace(array("\n", "\r"), '', $value['alamat']);
-            $keterangan = str_replace(array("\n", "\r"), '', $value['keterangan']);
-
-            $HTML .= "<div class='media'>";
-            $HTML .= "<div class='media-left'>";
-            $HTML .= "<img src='$gambar' class='media-object' style='width:150px;border-radius:5px;'>";
-            $HTML .= "</div>";
-            $HTML .= "<div class='media-body'>";
-            $HTML .= "<ul style='list-style-type:none;'>";
-            $HTML .= "<li><h4>$value[nama_tps]</h4></li>";
-            $HTML .= "<li>ALamat, $alamat</li>";
-            $HTML .= "<li>No Telp, $value[telp]</li>";
-            $HTML .= "<li>Keterangan, $keterangan</li>";
-            $HTML .= "</ol>";
-            $HTML .= "</div>";
-            $HTML .= "</div>";
-
-            $marker = array();
-            $marker['position'] = "$value[lat],$value[lng]";
-            $marker['title'] = $value['nama_tps'];
-            $marker['infowindow_content'] = $HTML;
-            $HTML = "";
-
-
-            $marker['icon'] = base_url("uploads/img/" . $value['marker']);
-            $this->googlemaps->add_marker($marker);
-        }
-
-        $data = [
-            'title' => 'Persebaran',
-            'map' => $this->googlemaps->create_map(),
-        ];
-
-        $this->view('home/v_home_map', $data);
-    }
-
-    public function kontak()
+    public function berita()
     {
 
+        $search = str_replace("+", " ", $this->input->get("s"));
+
+        $per_page = '4'; #banyaknya data yang ditampilkan
+        $total = $this->berita->getData("", "", $search)->num_rows(); #ambil semua total data tps
+
         $data = [
-            'title' => 'Kontak',
+            'title' => "Daftar Berita",
+            'pagin' => PaginFrontend('berita', $total, $per_page),
+            'berita' => $this->berita->getData($per_page, Offset('berita', 1), $search)->result_array(),
+            'lastest' => $this->berita->getLastest(5),
+            'search' => $search,
         ];
 
-        $this->view('home/v_home_kontak', $data);
+        $this->view('home/v_home_berita', $data);
     }
 
-    public function save_kontak()
+
+    public function beritaSingle($slug = "")
+    {
+        $berita = $this->berita->getDataSlug($slug);
+        $data = [
+            'title' => $berita['judul'],
+            'berita' => $berita,
+            'lastest' => $this->berita->getLastest(5),
+        ];
+
+        $this->view('home/v_home_berita_single', $data);
+    }
+
+
+    public function pengaduan()
     {
 
         if ($this->input->is_ajax_request()) {
-            $csrf = csrf_hash();
+
+            if (strlen($this->input->get("pasien")) > 2) {
+                $msg = ["success" => false, "pesan" => "Maaf, kode pasien tidak ditemukan, silahkan hubungi pihak Puskesmas"];
+
+                $pasien = $this->pasien->getDataKode($this->input->get("pasien"));
+
+                if ($pasien) {
+                    $msg = ["success" => true, "pesan" => "Data ditemukan..", "data" => $pasien];
+                }
+            }
+
+            echo json_encode($msg);
+            exit();
+        } else {
 
             $data = [
-                'nama' => $this->input->post('nama'),
-                'email' => $this->input->post('email'),
-                'pesan' => $this->input->post('pesan')
+                'title' => "Ajukan Pengaduan",
+                'kategori' => $this->db->get("kategori_pengaduan")->result_array()
             ];
 
+            $this->view("home/v_home_pengaduan", $data);
+        }
+    }
 
-            $insert = $this->db->insert("tb_kontak", $data);
 
-            $msg = ["success" => true, "csrf" => $csrf, "pesan" => "Pesan berhasil dikirim..!"];
+    public function pengaduan_save()
+    {
 
+        if ($this->input->is_ajax_request()) {
+            $msg = ["success" => false, "pesan" => "Terjadi kesalahan, silahkan refresh halaman!"];
+            $pasien = $this->pasien->getDataKode($this->input->get("kode_pasien"));
+
+            if ($pasien) {
+
+                $data = [
+                    'id_pasien' => $pasien['id'],
+                    'id_kategori' => $this->input->post("id_kategori"),
+                    'pengaduan' => $this->input->post("pengaduan"),
+                    'status' => 0,
+                    'tgl_pengaduan' => current_timestamp()
+
+                ];
+
+                $this->db->insert("pengaduan", $data);
+
+                $msg = ["success" => true, "pesan" => "Pengaduan berhasil dikirim, terimakasih.."];
+            }
 
             echo json_encode($msg);
         }
     }
 
-
-    public function daftarTps()
+    public function pengaduan_cek()
     {
-
-        $search = $this->input->get("s");
-
-        $per_page = '5'; #banyaknya data yang ditampilkan
-        $total = $this->tpsModel->getData()->num_rows(); #ambil semua total data tps
-
+        $kode = $this->input->get("kode_pasien");
         $data = [
-            'title' => "Daftar TPS",
-            'pagin' => PaginFrontend('daftar-tps', $total, $per_page),
-            'tps' => $this->tpsModel->getData($per_page, Offset('daftar-tps', 1))->result_array(),
-            'banyakDilihat' => $this->tpsModel->getDataBanyakDilihat(),
+            'title' => "Cek Pengaduan",
+            'data' => $this->pengaduan->getDataKode($kode),
+            'kode' => $kode,
         ];
 
-        $this->view('home/v_home_daftar_tps', $data);
-    }
-
-    public function detailTps($id = "")
-    {
-        $id = decode($id);
-        if ($id) {
-            $D = $this->tpsModel->getDataID($id);
-            if ($D) {
-
-                $config = [
-                    'map_div_id' => "map-add",
-                    'map_height' => "350px",
-                    'center' => $D['lat'] . ',' . $D['lng'],
-                    'zoom' => !empty($pengaturan['zoom']) ? $pengaturan['zoom'] : "12",
-                ];
-
-                $this->googlemaps->initialize($config);
-                $alamat = str_replace(array("\n", "\r"), '', $D['alamat']);
-                // $keterangan = str_replace(array("\n", "\r"), '', $D['keterangan']);
-                $HTML = "";
-                $HTML .= "<div class='media'>";
-                $HTML .= "<div class='media-left'>";
-                $HTML .= "<img src='" . base_url('uploads/img/' . $D['gambar']) . "' class='media-object' style='width:150px;'>";
-                $HTML .= "</div>";
-                $HTML .= "<div class='media-body'>";
-                $HTML .= "<h4>$D[nama_tps]</h4>";
-                $HTML .= "<ol>";
-                $HTML .= "<li>ALamat, $alamat</li>";
-                $HTML .= "<li>No Telp, $D[telp]</li>";
-                $HTML .= "</ol>";
-                $HTML .= "</div>";
-                $HTML .= "</div>";
-
-                $marker = [
-                    'position' => $D['lat'] . ',' . $D['lng'],
-                    'draggable' => true,
-                    'animation' => 'BOUNCE',
-                    'infowindow_content' => $HTML,
-                    'icon' => base_url("uploads/img/" . $D['marker']),
-                    'id' => "van",
-                ];
-
-                $this->googlemaps->add_marker($marker);
-
-                $data = [
-                    'title' => $D['nama_tps'],
-                    'data' => $D,
-                    'map' => $this->googlemaps->create_map(),
-                    'banyakDilihat' => $this->tpsModel->getDataBanyakDilihat(),
-                ];
-
-                $this->tpsModel->updateDataID($id);
-
-                $this->view('home/v_home_detail_tps', $data);
-            } else {
-                show_404();
-            }
-        } else {
-            show_404();
-        }
-    }
-
-
-    public function rute($id)
-    {
-
-        $id = decode($id);
-
-        if ($id) {
-        } else {
-            show_404("maaf, data tidak ditemukan!");
-        }
-    }
-
-    public function get_route($id)
-    {
-        if ($this->session->userdata('logged_in') != "" && $this->session->userdata('id_role') == "1") {
-
-            $directionLat = $this->input->post('latitude');
-            $directionLng = $this->input->post('longitude');
-
-            if ($directionLat == 0 && $directionLng == 0) {
-
-                $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert"> Silahkan Tentukan Lokasi Anda Terlebih Dahulu ! <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                redirect('admin/costumer/route/' . $id);
-            } else {
-
-                $datamap = $this->m_costumer->detail_costumer_info($id);
-
-                $config['map_div_id'] = "map-add";
-                $config['center'] = $datamap->latitude . ',' . $datamap->longitude;
-                $config['map_height'] = '400px;';
-                $config['zoom'] = 'auto';
-                $config['minzoom'] = '11';
-                $config['directions'] = TRUE;
-                $config['directionsStart'] = $directionLat . ',' . $directionLng;
-                $config['directionsEnd'] = $datamap->latitude . ',' . $datamap->longitude;
-                $config['directionsDraggable'] = TRUE;
-                $config['directionsDivID'] = 'directionsDiv';
-                $this->googlemaps->initialize($config);
-
-                // $marker = array();
-                // $marker['position'] = $datamap->latitude . ',' . $datamap->longitude;
-                // $marker['animation'] = 'DROP';
-                // $marker['icon'] = base_url("assets/icon/marker.png");
-                // $this->googlemaps->add_marker($marker);
-
-                $data['map'] = $this->googlemaps->create_map();
-
-                $data['get_costumer_detail'] = $this->m_costumer->detail_costumer_info($id);
-
-                $data['title'] = "Rute Costumer : $datamap->nama_costumer ";
-
-                // var_dump($config);
-                // die;
-
-
-                $this->render('admin/costumer_route', $data);
-            }
-        } else {
-            redirect('login/logout');
-        }
+        $this->view("home/v_home_pengaduan_cek", $data);
     }
 }

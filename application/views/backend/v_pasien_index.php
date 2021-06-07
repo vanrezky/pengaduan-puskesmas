@@ -1,3 +1,4 @@
+<?php $role = $this->session->userdata("role"); ?>
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
@@ -7,14 +8,16 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <div class="float-right">
-                <a href="<?= base_url('backend/pasien/add') ?>" class="btn btn-primary btn-icon-split btn-sm">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-plus"></i>
-                    </span>
-                    <span class="text">Tambah Pasien</span>
-                </a>
-            </div>
+            <?php if ($role == "petugas") {; ?>
+                <div class="float-right">
+                    <a href="<?= base_url('backend/pasien/add') ?>" class="btn btn-primary btn-icon-split btn-sm">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                        <span class="text">Tambah Pasien</span>
+                    </a>
+                </div>
+            <?php } ?>
         </div>
 
         <div class="card-body">
@@ -28,7 +31,7 @@
                             <th>Jenis Kelamin</th>
                             <th>Alamat</th>
                             <th>Telepon</th>
-                            <th>Aksi</th>
+                            <?= $role == "petugas" ? "<th>Aksi</th>" : ""; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,10 +48,13 @@
                                 echo "<td>$value[jenis_kelamin]</td>";
                                 echo "<td>$value[alamat]</td>";
                                 echo "<td>$value[telp]</td>";
-                                echo "<td class='text-center'>";
-                                echo "<a href='" . $baseurl . "backend/pasien/edit/$id' class='btn btn-warning btn-sm mx-1 my-1'><i class='fas fa-edit'></i></a>";
-                                echo "<a href='javascript:void(0)' data-id='" . encode($value['id']) . "' class='btn btn-danger btn-sm mx-1 my-1 btn-delete'><i class='fas fa-trash'></i></a>";
-                                echo "</td>";
+                                if ($role == 'petugas') {
+
+                                    echo "<td class='text-center'>";
+                                    echo "<a href='" . $baseurl . "backend/pasien/edit/$id' class='btn btn-warning btn-sm mx-1 my-1'><i class='fas fa-edit'></i></a>";
+                                    echo "<a href='javascript:void(0)' data-id='" . encode($value['id']) . "' class='btn btn-danger btn-sm mx-1 my-1 btn-delete'><i class='fas fa-trash'></i></a>";
+                                    echo "</td>";
+                                }
                                 echo "</tr>";
                                 $no++;
                             }

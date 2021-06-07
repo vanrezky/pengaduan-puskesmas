@@ -127,4 +127,21 @@ class User extends MY_Controller
             echo json_encode($msg);
         }
     }
+
+    public function delete($id = "")
+    {
+
+        if ($this->input->is_ajax_request()) {
+            $id = decode($id);
+            $msg = ["success" => false, "Terjadi kesalahan"];
+            if ($id) {
+                $delete = $this->user->deleteDataID($id);
+
+                $msg = ["success" => true, "pesan" => "Data berhasil dihapus!"];
+            }
+
+
+            echo json_encode($msg);
+        }
+    }
 }

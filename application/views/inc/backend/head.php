@@ -11,7 +11,7 @@
 
     <title><?php echo $title; ?> | <?php echo $pengaturan["nama_website"]; ?></title>
 
-    <link rel="shortcut icon" href="<?= base_url('assets/img/' . $pengaturan["logo"]); ?>">
+    <link rel="icon" href="<?= base_url('assets/img/fav.png'); ?>" type="image/png">
 
     <!-- Custom fonts for this template-->
     <link href="<?= base_url(); ?>assets/backend/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">

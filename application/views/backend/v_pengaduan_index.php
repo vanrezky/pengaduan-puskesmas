@@ -7,7 +7,9 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-
+            <div class="float-right">
+                <a href="<?= base_url("pdf/" . encode(["index" => "pengaduan"])); ?>" class="btn btn-primary"><i class="fas fa-file-pdf"></i> Cetak </a>
+            </div>
         </div>
 
         <div class="card-body">
@@ -16,26 +18,30 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama</th>
-                            <th>Email</th>
-                            <th width="35%">Pesan</th>
+                            <th>Waktu Pelaporan</th>
+                            <th>Kode Pasien</th>
+                            <th>Data Pasien</th>
+                            <th width="35%">Isi Pengaduan</th>
+                            <th>Status Pengaduan</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        if (!empty($kontak)) {
-                            $baseurl = base_url("admin/kontak");
+                        if (!empty($pengaduan)) {
+                            $baseurl = base_url("backend/pengaduan");
                             $no = 1;
-                            foreach ($kontak as $key => $value) {
-                                $id = encode($value['id_kontak']);
+                            foreach ($pengaduan as $key => $value) {
+                                $id = encode($value['id']);
                                 echo "<tr>";
                                 echo "<td>$no</td>";
-                                echo "<td>$value[nama]</td>";
-                                echo "<td>$value[email]</td>";
-                                echo "<td>$value[pesan]</td>";
+                                echo "<td>" . tgl_jam_indo($value['tgl_pengaduan']) . "</td>";
+                                echo "<td>$value[kode_pasien]</td>";
+                                echo "<td><b>Nama:</b> $value[nama_pasien] <br/> <b>Jenis Kelamin:</b> $value[jenis_kelamin] <br/> <b>Alamat:</b> $value[alamat] <br/> <b>Telp:</b> $value[telp]</td>";
+                                echo "<td>$value[pengaduan]</td>";
+                                echo "<td>" . status_pengaduan($value['status']) . "</td>";
                                 echo "<td class='text-center'>";
-                                echo "<a href='javascript:void(0)' data-id='" . encode($value['id_kontak']) . "' class='btn btn-danger btn-sm mx-1 my-1 btn-delete'><i class='fas fa-trash'></i></a>";
+                                echo "<a href='$baseurl/lihat/$id' class='btn btn-info btn-sm'><i class='fas fa-eye'></i> Lihat</a>";
                                 echo "</td>";
                                 echo "</tr>";
                                 $no++;

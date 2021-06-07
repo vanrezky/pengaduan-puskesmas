@@ -234,9 +234,21 @@ function role_akses()
     ];
 }
 
-function getStatus($status)
+function status_pengaduan($status)
 {
-    return "";
+    switch ($status) {
+        case '1':
+            $status = "<span class='badge badge-success'>Diterima & Selesai</span>";
+            break;
+        case '0':
+            $status = "<span class='badge badge-danger'>Menunggu Konfirmasi</span>";
+            break;
+        default:
+            $status = "<span class='badge badge-warning'>Menunggu Konfirmasi</span>";
+            break;
+    }
+
+    return $status;
 }
 
 function getJenisKelamin()
