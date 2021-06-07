@@ -5,7 +5,7 @@ class M_pengaduan extends CI_Model
 
     public function getData($per_page = "", $offset = "", $tgl_mulai = "", $tgl_selesai = "")
     {
-        $this->db->select("pengaduan.*,pasien.kode_pasien, pasien.nama_pasien, pasien.jenis_kelamin, pasien.alamat, pasien.telp, kategori_pengaduan.nama_kategori");
+        $this->db->select("pengaduan.*,pasien.kode_pasien, pasien.nama_pasien, pasien.jenis_kelamin, pasien.alamat, pasien.telp, pasien.email, kategori_pengaduan.nama_kategori");
         $this->db->join("kategori_pengaduan", "pengaduan.id_kategori = kategori_pengaduan.id", "LEFT");
         $this->db->join("pasien", "pengaduan.id_pasien = pasien.id", "LEFT");
         if ($tgl_mulai && $tgl_selesai) {
@@ -18,7 +18,7 @@ class M_pengaduan extends CI_Model
 
     public function getDataID($id)
     {
-        $this->db->select("pengaduan.*,pasien.kode_pasien, pasien.nama_pasien, pasien.jenis_kelamin, pasien.alamat, pasien.telp, kategori_pengaduan.nama_kategori");
+        $this->db->select("pengaduan.*,pasien.kode_pasien, pasien.nama_pasien, pasien.jenis_kelamin, pasien.alamat, pasien.telp, pasien.email, kategori_pengaduan.nama_kategori");
         $this->db->join("kategori_pengaduan", "pengaduan.id_kategori = kategori_pengaduan.id", "LEFT");
         $this->db->join("pasien", "pengaduan.id_pasien = pasien.id", "LEFT");
         $this->db->where("pengaduan.id", $id);
@@ -46,7 +46,7 @@ class M_pengaduan extends CI_Model
 
     public function getDataLatest()
     {
-        $this->db->select("pengaduan.*,pasien.kode_pasien, pasien.nama_pasien, pasien.jenis_kelamin, pasien.alamat, pasien.telp, kategori_pengaduan.nama_kategori");
+        $this->db->select("pengaduan.*,pasien.kode_pasien, pasien.nama_pasien, pasien.jenis_kelamin, pasien.alamat, pasien.telp, pasien.email, kategori_pengaduan.nama_kategori");
         $this->db->join("kategori_pengaduan", "pengaduan.id_kategori = kategori_pengaduan.id", "LEFT");
         $this->db->join("pasien", "pengaduan.id_pasien = pasien.id", "LEFT");
         $this->db->order_by("pengaduan.id", "DESC");
@@ -56,7 +56,7 @@ class M_pengaduan extends CI_Model
 
     public function getDataKode($kode)
     {
-        $this->db->select("pengaduan.*,pasien.kode_pasien, pasien.nama_pasien, pasien.jenis_kelamin, pasien.alamat, pasien.telp, kategori_pengaduan.nama_kategori");
+        $this->db->select("pengaduan.*,pasien.kode_pasien, pasien.nama_pasien, pasien.jenis_kelamin, pasien.alamat, pasien.telp, pasien.email, kategori_pengaduan.nama_kategori");
         $this->db->join("kategori_pengaduan", "pengaduan.id_kategori = kategori_pengaduan.id", "LEFT");
         $this->db->join("pasien", "pengaduan.id_pasien = pasien.id", "LEFT");
         $this->db->where("pasien.kode_pasien", $kode);

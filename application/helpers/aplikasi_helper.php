@@ -234,19 +234,34 @@ function role_akses()
     ];
 }
 
-function status_pengaduan($status)
+function status_pengaduan($status, $html = true)
 {
-    switch ($status) {
-        case '1':
-            $status = "<span class='badge badge-success'>Diterima & Selesai</span>";
-            break;
-        case '0':
-            $status = "<span class='badge badge-danger'>Menunggu Konfirmasi</span>";
-            break;
-        default:
-            $status = "<span class='badge badge-warning'>Menunggu Konfirmasi</span>";
-            break;
+    if ($html) {
+        switch ($status) {
+            case '1':
+                $status = "<span class='badge badge-success'>Diterima & Selesai</span>";
+                break;
+            case '0':
+                $status = "<span class='badge badge-danger'>Menunggu Konfirmasi</span>";
+                break;
+            default:
+                $status = "<span class='badge badge-warning'>Menunggu Konfirmasi</span>";
+                break;
+        }
+    } else {
+        switch ($status) {
+            case '1':
+                $status = "Diterima & Selesai";
+                break;
+            case '0':
+                $status = "Menunggu Konfirmasi";
+                break;
+            default:
+                $status = "Menunggu Konfirmasi";
+                break;
+        }
     }
+
 
     return $status;
 }

@@ -62,11 +62,22 @@ class Pengaduan extends MY_Controller
             $update = $this->pengaduan->updateDataID($data, $id);
 
             if ($update) {
+                $data = $this->pengaduan->getDataID($id);
+
                 $msg = [
                     'success' => true,
                     'pesan' => 'Pengaduan berhasil dikonfirmasi!',
                     'csrf' => $csrf,
                 ];
+                if (!empty($data['email'])) {
+                    if (!$this->_sendEmail($data)) {
+                        $msg = [
+                            'success' => false,
+                            'pesan' => 'Terjadi kesalahan!!, email tidak dapat dikirim..',
+                            'csrf' => $csrf,
+                        ];
+                    }
+                }
             } else {
                 $msg = [
                     'success' => false,
@@ -79,6 +90,34 @@ class Pengaduan extends MY_Controller
             exit();
         } else {
             show_404();
+        }
+    }
+
+    private function _sendEmail($data)
+    {
+
+        $config = [
+            'protocol' => 'smtp',
+            'smtp_host' => 'ssl://smtp.googlemail.com',
+            'smtp_user' => '26desiiranatal@gmail.com',
+            'smtp_pass' => 'Qwe123asd123..',
+            'smtp_port' => 465,
+            'mailtype' => 'html',
+            'charset' => 'utf-8',
+            'newline' => "\r\n"
+        ];
+
+        $this->load->library("email", $config);
+
+        $this->email->from("26desiiranatal@gmail.com", "Pengaduan Puskesmas Payung Sekaki");
+        $this->email->to($data['email']);
+        $this->email->subject("Konfirmasi Pengaduan Puskesmas Payung Sekaki");
+        $this->email->message("Pengaduan anda yaitu: <br/><br/> kategori: $data[nama_kategori] <br/> Isi: $data[pengaduan] <br/><br/><br/> <b>Sudah berstatus: " . status_pengaduan($data['status']) . "</b>");
+
+        if ($this->email->send()) {
+            return true;
+        } else {
+            return false;
         }
     }
 

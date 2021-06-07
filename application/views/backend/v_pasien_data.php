@@ -48,6 +48,11 @@
                             <textarea class="form-control" name="alamat" rows="4" id="alamat"><?= isset($data['alamat']) ? $data['alamat'] : ""; ?></textarea>
                             <div class="invalid-feedback" id="feedalamat"></div>
                         </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" class="form-control" id="email" name="email" value="<?= isset($data['email']) ? $data['email'] : ""; ?>">
+                            <div class="invalid-feedback" id="feedemail"></div>
+                        </div>
 
 
                     </div>
@@ -140,6 +145,13 @@
                         } else {
                             $('#telp').removeClass('is-invalid');
                             $('#feedtelp').html("");
+                        }
+                        if (response.error.email) {
+                            $('#email').addClass('is-invalid');
+                            $('#feedemail').html(response.error.email);
+                        } else {
+                            $('#email').removeClass('is-invalid');
+                            $('#feedemail').html("");
                         }
 
                     }

@@ -67,6 +67,9 @@ class Pasien extends MY_Controller
             $validation->set_rules("telp", "Telp", "trim|required", [
                 'required' => "{field} tidak boleh kosong"
             ]);
+            $validation->set_rules("email", "Email", "trim|valid_email", [
+                'valid_email' => "{field} tidak valid"
+            ]);
 
             if ($validation->run() == false) {
                 $msg = [
@@ -77,6 +80,7 @@ class Pasien extends MY_Controller
                         'alamat' => form_error('alamat'),
                         'jenis_kelamin' => form_error('jenis_kelamin'),
                         'telp' => form_error('telp'),
+                        'email' => form_error("email"),
                     ]
                 ];
             } else {
@@ -87,6 +91,7 @@ class Pasien extends MY_Controller
                     'jenis_kelamin' => $this->input->post("jenis_kelamin"),
                     'alamat' => $this->input->post("alamat"),
                     'telp' => $this->input->post("telp"),
+                    'email' => $this->input->post("email"),
                 ];
 
                 if ($param) {

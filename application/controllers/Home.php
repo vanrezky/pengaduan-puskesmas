@@ -90,7 +90,7 @@ class Home extends MY_Controller
 
         if ($this->input->is_ajax_request()) {
             $msg = ["success" => false, "pesan" => "Terjadi kesalahan, silahkan refresh halaman!"];
-            $pasien = $this->pasien->getDataKode($this->input->get("kode_pasien"));
+            $pasien = $this->pasien->getDataKode($this->input->post("kode_pasien"));
 
             if ($pasien) {
 

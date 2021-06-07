@@ -44,6 +44,11 @@
                                 <td><?= $pengaduan['telp']; ?></td>
                             </tr>
                             <tr>
+                                <td>Email</td>
+                                <td>:</td>
+                                <td><?= !empty($pengaduan['email']) ? $pengaduan['email'] : "-"; ?></td>
+                            </tr>
+                            <tr>
                                 <td>Tanggal Pelaporan</td>
                                 <td>:</td>
                                 <td><?= tgl_jam_indo($pengaduan['tgl_pengaduan'])  ?></td>
@@ -103,6 +108,7 @@
                 dataType: "json",
                 beforeSend: function() {
                     $("#btn-submit").prop("disabled", true);
+                    Swal.showLoading();
                 },
                 success: function(response) {
                     $("#btn-submit").prop("disabled", false);

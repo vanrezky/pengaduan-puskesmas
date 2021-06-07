@@ -44,13 +44,7 @@ class M_pasien extends CI_Model
 
     public function getDataKode($kode)
     {
-        $this->db->select("*");
-        if (is_string($kode)) {
-            $this->db->where("PA.kode_pasien", $kode);
-        }
-        if (is_array($kode)) {
-            $this->db->where($kode);
-        }
+        $this->db->where("PA.kode_pasien", $kode);
         return $this->db->get($this::$table . " PA")->row_array();
     }
 }
