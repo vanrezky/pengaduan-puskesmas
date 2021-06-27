@@ -45,11 +45,6 @@ class Cetak extends CI_Controller
             'data' => $this->pengaduan->getData("", "", $tgl_mulai, $tgl_akhir)->result_array()
         ];
 
-        $this->generate(
-            "pdf/v_pdf_pengaduan",
-            $data,
-            $title,
-            false,
-        );
+        $this->generate("pdf/v_pdf_pengaduan", $data, $title);
     }
 }
